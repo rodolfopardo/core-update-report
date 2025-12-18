@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Google Core Update Impact Report - December 2025</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 40px; font-size: 12px; }
+        h1 { color: #1a73e8; border-bottom: 2px solid #1a73e8; padding-bottom: 10px; }
+        h2 { color: #333; margin-top: 30px; }
+        h3 { color: #555; text-align: center; }
+        .summary-box { background: #f5f5f5; padding: 20px; border-radius: 8px; margin: 20px 0; }
+        .charts-container { display: grid; grid-template-columns: repeat(2, 1fr); gap: 30px; margin: 30px 0; }
+        .chart-box { background: white; padding: 20px; border-radius: 8px; border: 1px solid #ddd; text-align: center; }
+        .chart-canvas { max-width: 300px; margin: 0 auto; }
+        .negative { color: #d93025; }
+        .positive { color: #188038; }
+        .neutral { color: #5f6368; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; font-size: 10px; }
+        th, td { padding: 6px; text-align: left; border-bottom: 1px solid #ddd; }
+        th { background: #1a73e8; color: white; }
+        tr:nth-child(even) { background: #f9f9f9; }
+        .verdict-neg { background: #fce8e6; color: #d93025; font-weight: bold; }
+        .verdict-pos { background: #e6f4ea; color: #188038; font-weight: bold; }
+        .verdict-neu { background: #f1f3f4; color: #5f6368; }
+        .footer { margin-top: 40px; color: #666; font-size: 10px; border-top: 1px solid #ddd; padding-top: 10px; }
+        .insight-box { background: #fff3cd; padding: 15px; border-radius: 8px; border-left: 4px solid #ffc107; margin: 20px 0; }
+    </style>
+</head>
+<body>
+    <h1>Impact Report: Google Core Update - December 2025</h1>
+    
+    <div class="summary-box">
+        <h2 style="margin-top:0">Executive Summary</h2>
+        <p><strong>Core Update Date:</strong> December 11, 2025</p>
+        <p><strong>Analysis Period:</strong> Dec 9-10 (before) vs Dec 11-12 (after)</p>
+        <p><strong>Clients Analyzed:</strong> 159</p>
+    </div>
+
+    <h2>Impact Comparison: Maps vs Search</h2>
+    
+    <div class="charts-container">
+        <div class="chart-box">
+            <h3>MAPS Impact</h3>
+            <div class="chart-canvas">
+                <canvas id="chartMaps"></canvas>
+            </div>
+        </div>
+        <div class="chart-box">
+            <h3>SEARCH Impact</h3>
+            <div class="chart-canvas">
+                <canvas id="chartSearch"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <div class="insight-box">
+        <strong>Key Finding:</strong> The December 2025 Core Update primarily affected <strong>Search impressions</strong>, 
+        where <strong class="negative">26% of clients</strong> experienced significant drops (≤-15%), 
+        compared to only <strong>13%</strong> in Maps. 
+        Conversely, Maps showed more clients with positive impact (<strong class="positive">32%</strong>) vs Search (<strong>13%</strong>).
+    </div>
+
+    <h2>Classification Criteria</h2>
+    <ul>
+        <li><strong class="negative">NEG IMPACTED:</strong> Variation ≤ -15%</li>
+        <li><strong class="neutral">NOT IMPACTED:</strong> Variation between -15% and +15%</li>
+        <li><strong class="positive">POS IMPACTED:</strong> Variation ≥ +15%</li>
+    </ul>
+
+    <h2>Client Details</h2>
+    <table>
+        <tr>
+            <th>Client</th>
+            <th>Maps Before</th>
+            <th>Maps After</th>
+            <th>Maps Var %</th>
+            <th>Maps Verdict</th>
+            <th>Search Before</th>
+            <th>Search After</th>
+            <th>Search Var %</th>
+            <th>Search Verdict</th>
+            <th>Locations</th>
+        </tr>
+<tr><td>royalamerican</td><td>727</td><td>0</td><td>-100.00%</td><td class="verdict-neg">NEG IMPACTED</td><td>6</td><td>1</td><td>-83.33%</td><td class="verdict-neg">NEG IMPACTED</td><td>106</td></tr>
+<tr><td>angelcorona</td><td>28</td><td>14</td><td>-50.00%</td><td class="verdict-neg">NEG IMPACTED</td><td>12</td><td>3</td><td>-75.00%</td><td class="verdict-neg">NEG IMPACTED</td><td>4</td></tr>
+<tr><td>w_mesquita_playground</td><td>5</td><td>4</td><td>-20.00%</td><td class="verdict-neg">NEG IMPACTED</td><td>20</td><td>8</td><td>-60.00%</td><td class="verdict-neg">NEG IMPACTED</td><td>1</td></tr>
+<tr><td>restonic</td><td>25</td><td>21</td><td>-16.00%</td><td class="verdict-neg">NEG IMPACTED</td><td>219</td><td>89</td><td>-59.36%</td><td class="verdict-neg">NEG IMPACTED</td><td>3</td></tr>
+<tr><td>keller</td><td>829</td><td>843</td><td>1.69%</td><td class="verdict-neu">NOT IMPACTED</td><td>2142</td><td>907</td><td>-57.66%</td><td class="verdict-neg">NEG IMPACTED</td><td>18</td></tr>
+<tr><td>agliving</td><td>1421</td><td>1213</td><td>-14.64%</td><td class="verdict-neu">NOT IMPACTED</td><td>2710</td><td>1168</td><td>-56.90%</td><td class="verdict-neg">NEG IMPACTED</td><td>22</td></tr>
+<tr><td>closetfactory</td><td>813</td><td>931</td><td>14.51%</td><td class="verdict-neu">NOT IMPACTED</td><td>4870</td><td>2141</td><td>-56.04%</td><td class="verdict-neg">NEG IMPACTED</td><td>69</td></tr>
+<tr><td>tbg</td><td>481</td><td>525</td><td>9.15%</td><td class="verdict-neu">NOT IMPACTED</td><td>1282</td><td>576</td><td>-55.07%</td><td class="verdict-neg">NEG IMPACTED</td><td>20</td></tr>
+<tr><td>roers_companies</td><td>1464</td><td>1442</td><td>-1.50%</td><td class="verdict-neu">NOT IMPACTED</td><td>2921</td><td>1331</td><td>-54.43%</td><td class="verdict-neg">NEG IMPACTED</td><td>55</td></tr>
+<tr><td>prevea</td><td>1565</td><td>1831</td><td>17.00%</td><td class="verdict-pos">POS IMPACTED</td><td>11920</td><td>5470</td><td>-54.11%</td><td class="verdict-neg">NEG IMPACTED</td><td>285</td></tr>
+<tr><td>hsf</td><td>5536</td><td>6366</td><td>14.99%</td><td class="verdict-neu">NOT IMPACTED</td><td>18122</td><td>8438</td><td>-53.44%</td><td class="verdict-neg">NEG IMPACTED</td><td>1780</td></tr>
+<tr><td>sscoop</td><td>12434</td><td>11834</td><td>-4.83%</td><td class="verdict-neu">NOT IMPACTED</td><td>6096</td><td>2871</td><td>-52.90%</td><td class="verdict-neg">NEG IMPACTED</td><td>67</td></tr>
+<tr><td>clockwork</td><td>2189</td><td>2516</td><td>14.94%</td><td class="verdict-neu">NOT IMPACTED</td><td>11068</td><td>5222</td><td>-52.82%</td><td class="verdict-neg">NEG IMPACTED</td><td>213</td></tr>
+<tr><td>afcga</td><td>753</td><td>1477</td><td>96.15%</td><td class="verdict-pos">POS IMPACTED</td><td>5148</td><td>2455</td><td>-52.31%</td><td class="verdict-neg">NEG IMPACTED</td><td>111</td></tr>
+<tr><td>ari</td><td>1242</td><td>1420</td><td>14.33%</td><td class="verdict-neu">NOT IMPACTED</td><td>3040</td><td>1455</td><td>-52.14%</td><td class="verdict-neg">NEG IMPACTED</td><td>41</td></tr>
+<tr><td>firstbank</td><td>1880</td><td>1843</td><td>-1.97%</td><td class="verdict-neu">NOT IMPACTED</td><td>7416</td><td>3585</td><td>-51.66%</td><td class="verdict-neg">NEG IMPACTED</td><td>95</td></tr>
+<tr><td>victory</td><td>19718</td><td>17913</td><td>-9.15%</td><td class="verdict-neu">NOT IMPACTED</td><td>37617</td><td>18279</td><td>-51.41%</td><td class="verdict-neg">NEG IMPACTED</td><td>111</td></tr>
+<tr><td>roundhouse_group</td><td>1452</td><td>1296</td><td>-10.74%</td><td class="verdict-neu">NOT IMPACTED</td><td>3806</td><td>1853</td><td>-51.31%</td><td class="verdict-neg">NEG IMPACTED</td><td>40</td></tr>
+<tr><td>gostoreit</td><td>2653</td><td>3079</td><td>16.06%</td><td class="verdict-pos">POS IMPACTED</td><td>7585</td><td>3698</td><td>-51.25%</td><td class="verdict-neg">NEG IMPACTED</td><td>188</td></tr>
+<tr><td>robeks</td><td>7867</td><td>9215</td><td>17.13%</td><td class="verdict-pos">POS IMPACTED</td><td>13265</td><td>6563</td><td>-50.52%</td><td class="verdict-neg">NEG IMPACTED</td><td>109</td></tr>
+<tr><td>skyzone</td><td>704137</td><td>883702</td><td>25.50%</td><td class="verdict-pos">POS IMPACTED</td><td>116989</td><td>58917</td><td>-49.64%</td><td class="verdict-neg">NEG IMPACTED</td><td>254</td></tr>
+<tr><td>agpro</td><td>6675</td><td>2903</td><td>-56.51%</td><td class="verdict-neg">NEG IMPACTED</td><td>9340</td><td>4722</td><td>-49.44%</td><td class="verdict-neg">NEG IMPACTED</td><td>84</td></tr>
+<tr><td>atcdevelopment</td><td>304</td><td>336</td><td>10.53%</td><td class="verdict-neu">NOT IMPACTED</td><td>1973</td><td>1003</td><td>-49.16%</td><td class="verdict-neg">NEG IMPACTED</td><td>11</td></tr>
+<tr><td>michaels</td><td>624535</td><td>708053</td><td>13.37%</td><td class="verdict-neu">NOT IMPACTED</td><td>2539357</td><td>1291751</td><td>-49.13%</td><td class="verdict-neg">NEG IMPACTED</td><td>2311</td></tr>
+<tr><td>chickensaladchick</td><td>81089</td><td>88884</td><td>9.61%</td><td class="verdict-neu">NOT IMPACTED</td><td>161818</td><td>83451</td><td>-48.43%</td><td class="verdict-neg">NEG IMPACTED</td><td>327</td></tr>
+<tr><td>woworks</td><td>28766</td><td>34275</td><td>19.15%</td><td class="verdict-pos">POS IMPACTED</td><td>55829</td><td>29359</td><td>-47.41%</td><td class="verdict-neg">NEG IMPACTED</td><td>237</td></tr>
+<tr><td>credit_central_llc</td><td>695</td><td>788</td><td>13.38%</td><td class="verdict-neu">NOT IMPACTED</td><td>8397</td><td>5115</td><td>-39.09%</td><td class="verdict-neg">NEG IMPACTED</td><td>139</td></tr>
+<tr><td>avenueshomecare</td><td>100</td><td>102</td><td>2.00%</td><td class="verdict-neu">NOT IMPACTED</td><td>756</td><td>535</td><td>-29.23%</td><td class="verdict-neg">NEG IMPACTED</td><td>22</td></tr>
+<tr><td>rothstaffing</td><td>1265</td><td>1160</td><td>-8.30%</td><td class="verdict-neu">NOT IMPACTED</td><td>15050</td><td>11790</td><td>-21.66%</td><td class="verdict-neg">NEG IMPACTED</td><td>98</td></tr>
+<tr><td>dynabrade</td><td>55</td><td>61</td><td>10.91%</td><td class="verdict-neu">NOT IMPACTED</td><td>316</td><td>252</td><td>-20.25%</td><td class="verdict-neg">NEG IMPACTED</td><td>8</td></tr>
+<tr><td>willamette_dental</td><td>670</td><td>503</td><td>-24.93%</td><td class="verdict-neg">NEG IMPACTED</td><td>1652</td><td>1320</td><td>-20.10%</td><td class="verdict-neg">NEG IMPACTED</td><td>46</td></tr>
+<tr><td>decadental</td><td>1248</td><td>194</td><td>-84.46%</td><td class="verdict-neg">NEG IMPACTED</td><td>689</td><td>558</td><td>-19.01%</td><td class="verdict-neg">NEG IMPACTED</td><td>82</td></tr>
+<tr><td>healthsourcechiropractic</td><td>168</td><td>184</td><td>9.52%</td><td class="verdict-neu">NOT IMPACTED</td><td>623</td><td>506</td><td>-18.78%</td><td class="verdict-neg">NEG IMPACTED</td><td>18</td></tr>
+<tr><td>sylvan_learning</td><td>5564</td><td>5133</td><td>-7.75%</td><td class="verdict-neu">NOT IMPACTED</td><td>21853</td><td>17977</td><td>-17.74%</td><td class="verdict-neg">NEG IMPACTED</td><td>604</td></tr>
+<tr><td>elegance</td><td>440</td><td>458</td><td>4.09%</td><td class="verdict-neu">NOT IMPACTED</td><td>2752</td><td>2299</td><td>-16.46%</td><td class="verdict-neg">NEG IMPACTED</td><td>19</td></tr>
+<tr><td>advenirazora</td><td>1510</td><td>1416</td><td>-6.23%</td><td class="verdict-neu">NOT IMPACTED</td><td>5222</td><td>4379</td><td>-16.14%</td><td class="verdict-neg">NEG IMPACTED</td><td>37</td></tr>
+<tr><td>cymliving</td><td>1549</td><td>1459</td><td>-5.81%</td><td class="verdict-neu">NOT IMPACTED</td><td>10921</td><td>9160</td><td>-16.12%</td><td class="verdict-neg">NEG IMPACTED</td><td>65</td></tr>
+<tr><td>embrey</td><td>3380</td><td>3312</td><td>-2.01%</td><td class="verdict-neu">NOT IMPACTED</td><td>8742</td><td>7336</td><td>-16.08%</td><td class="verdict-neg">NEG IMPACTED</td><td>42</td></tr>
+<tr><td>anchorpacifica</td><td>508</td><td>561</td><td>10.43%</td><td class="verdict-neu">NOT IMPACTED</td><td>1432</td><td>1204</td><td>-15.92%</td><td class="verdict-neg">NEG IMPACTED</td><td>31</td></tr>
+<tr><td>nha</td><td>2349</td><td>2155</td><td>-8.26%</td><td class="verdict-neu">NOT IMPACTED</td><td>5108</td><td>4315</td><td>-15.52%</td><td class="verdict-neg">NEG IMPACTED</td><td>111</td></tr>
+<tr><td>pep</td><td>336</td><td>339</td><td>0.89%</td><td class="verdict-neu">NOT IMPACTED</td><td>693</td><td>586</td><td>-15.44%</td><td class="verdict-neg">NEG IMPACTED</td><td>9</td></tr>
+<tr><td>borger</td><td>295</td><td>364</td><td>23.39%</td><td class="verdict-pos">POS IMPACTED</td><td>644</td><td>546</td><td>-15.22%</td><td class="verdict-neg">NEG IMPACTED</td><td>7</td></tr>
+<tr><td>elmecommunities</td><td>455</td><td>458</td><td>0.66%</td><td class="verdict-neu">NOT IMPACTED</td><td>1711</td><td>1460</td><td>-14.67%</td><td class="verdict-neu">NOT IMPACTED</td><td>9</td></tr>
+<tr><td>dexmedia</td><td>971</td><td>142</td><td>-85.38%</td><td class="verdict-neg">NEG IMPACTED</td><td>573</td><td>490</td><td>-14.49%</td><td class="verdict-neu">NOT IMPACTED</td><td>82</td></tr>
+<tr><td>carlisle_residential</td><td>405</td><td>484</td><td>19.51%</td><td class="verdict-pos">POS IMPACTED</td><td>2546</td><td>2184</td><td>-14.22%</td><td class="verdict-neu">NOT IMPACTED</td><td>17</td></tr>
+<tr><td>monarch</td><td>3971</td><td>4098</td><td>3.20%</td><td class="verdict-neu">NOT IMPACTED</td><td>21521</td><td>18471</td><td>-14.17%</td><td class="verdict-neu">NOT IMPACTED</td><td>144</td></tr>
+<tr><td>paskingroup</td><td>830</td><td>776</td><td>-6.51%</td><td class="verdict-neu">NOT IMPACTED</td><td>2668</td><td>2297</td><td>-13.91%</td><td class="verdict-neu">NOT IMPACTED</td><td>14</td></tr>
+<tr><td>aptsharedsvcs</td><td>2091</td><td>2202</td><td>5.31%</td><td class="verdict-neu">NOT IMPACTED</td><td>5209</td><td>4487</td><td>-13.86%</td><td class="verdict-neu">NOT IMPACTED</td><td>98</td></tr>
+<tr><td>luma_residential</td><td>1720</td><td>1827</td><td>6.22%</td><td class="verdict-neu">NOT IMPACTED</td><td>4343</td><td>3768</td><td>-13.24%</td><td class="verdict-neu">NOT IMPACTED</td><td>30</td></tr>
+<tr><td>seldin</td><td>2270</td><td>2436</td><td>7.31%</td><td class="verdict-neu">NOT IMPACTED</td><td>6869</td><td>5971</td><td>-13.07%</td><td class="verdict-neu">NOT IMPACTED</td><td>135</td></tr>
+<tr><td>villagegreencompanies</td><td>5819</td><td>5954</td><td>2.32%</td><td class="verdict-neu">NOT IMPACTED</td><td>21718</td><td>18950</td><td>-12.75%</td><td class="verdict-neu">NOT IMPACTED</td><td>172</td></tr>
+<tr><td>bender_realty</td><td>56</td><td>62</td><td>10.71%</td><td class="verdict-neu">NOT IMPACTED</td><td>165</td><td>144</td><td>-12.73%</td><td class="verdict-neu">NOT IMPACTED</td><td>6</td></tr>
+<tr><td>little_kickers</td><td>206</td><td>264</td><td>28.16%</td><td class="verdict-pos">POS IMPACTED</td><td>2181</td><td>1905</td><td>-12.65%</td><td class="verdict-neu">NOT IMPACTED</td><td>69</td></tr>
+<tr><td>tebra</td><td>56174</td><td>56671</td><td>0.88%</td><td class="verdict-neu">NOT IMPACTED</td><td>378714</td><td>332180</td><td>-12.29%</td><td class="verdict-neu">NOT IMPACTED</td><td>2721</td></tr>
+<tr><td>next_property_management</td><td>358</td><td>372</td><td>3.91%</td><td class="verdict-neu">NOT IMPACTED</td><td>990</td><td>874</td><td>-11.72%</td><td class="verdict-neu">NOT IMPACTED</td><td>14</td></tr>
+<tr><td>imt</td><td>4394</td><td>4554</td><td>3.64%</td><td class="verdict-neu">NOT IMPACTED</td><td>9883</td><td>8730</td><td>-11.67%</td><td class="verdict-neu">NOT IMPACTED</td><td>53</td></tr>
+<tr><td>afca</td><td>26467</td><td>26111</td><td>-1.35%</td><td class="verdict-neu">NOT IMPACTED</td><td>26466</td><td>23399</td><td>-11.59%</td><td class="verdict-neu">NOT IMPACTED</td><td>170</td></tr>
+<tr><td>unleashedbrands</td><td>1734</td><td>2182</td><td>25.84%</td><td class="verdict-pos">POS IMPACTED</td><td>4111</td><td>3638</td><td>-11.51%</td><td class="verdict-neu">NOT IMPACTED</td><td>127</td></tr>
+<tr><td>upperlinehealth</td><td>2462</td><td>3353</td><td>36.19%</td><td class="verdict-pos">POS IMPACTED</td><td>17926</td><td>15869</td><td>-11.47%</td><td class="verdict-neu">NOT IMPACTED</td><td>281</td></tr>
+<tr><td>dsl</td><td>11041</td><td>12013</td><td>8.80%</td><td class="verdict-neu">NOT IMPACTED</td><td>39664</td><td>35148</td><td>-11.39%</td><td class="verdict-neu">NOT IMPACTED</td><td>370</td></tr>
+<tr><td>celebreeschool</td><td>1707</td><td>1546</td><td>-9.43%</td><td class="verdict-neu">NOT IMPACTED</td><td>3616</td><td>3220</td><td>-10.95%</td><td class="verdict-neu">NOT IMPACTED</td><td>80</td></tr>
+<tr><td>block_multifamily_group</td><td>1443</td><td>1334</td><td>-7.55%</td><td class="verdict-neu">NOT IMPACTED</td><td>4686</td><td>4177</td><td>-10.86%</td><td class="verdict-neu">NOT IMPACTED</td><td>38</td></tr>
+<tr><td>discoverypoint</td><td>504</td><td>448</td><td>-11.11%</td><td class="verdict-neu">NOT IMPACTED</td><td>983</td><td>882</td><td>-10.27%</td><td class="verdict-neu">NOT IMPACTED</td><td>21</td></tr>
+<tr><td>fpmg</td><td>1339</td><td>1425</td><td>6.42%</td><td class="verdict-neu">NOT IMPACTED</td><td>3007</td><td>2702</td><td>-10.14%</td><td class="verdict-neu">NOT IMPACTED</td><td>44</td></tr>
+<tr><td>bigos</td><td>2089</td><td>2013</td><td>-3.64%</td><td class="verdict-neu">NOT IMPACTED</td><td>4352</td><td>3911</td><td>-10.13%</td><td class="verdict-neu">NOT IMPACTED</td><td>55</td></tr>
+<tr><td>mosscompany</td><td>7355</td><td>9436</td><td>28.29%</td><td class="verdict-pos">POS IMPACTED</td><td>10298</td><td>9284</td><td>-9.85%</td><td class="verdict-neu">NOT IMPACTED</td><td>196</td></tr>
+<tr><td>vavia</td><td>188</td><td>152</td><td>-19.15%</td><td class="verdict-neg">NEG IMPACTED</td><td>1182</td><td>1071</td><td>-9.39%</td><td class="verdict-neu">NOT IMPACTED</td><td>24</td></tr>
+<tr><td>kryuus</td><td>43303</td><td>41558</td><td>-4.03%</td><td class="verdict-neu">NOT IMPACTED</td><td>188732</td><td>171204</td><td>-9.29%</td><td class="verdict-neu">NOT IMPACTED</td><td>4645</td></tr>
+<tr><td>pb</td><td>461785</td><td>478648</td><td>3.65%</td><td class="verdict-neu">NOT IMPACTED</td><td>370654</td><td>336430</td><td>-9.23%</td><td class="verdict-neu">NOT IMPACTED</td><td>3682</td></tr>
+<tr><td>mgproperties</td><td>6941</td><td>7027</td><td>1.24%</td><td class="verdict-neu">NOT IMPACTED</td><td>13617</td><td>12433</td><td>-8.70%</td><td class="verdict-neu">NOT IMPACTED</td><td>110</td></tr>
+<tr><td>prairiecare</td><td>372</td><td>365</td><td>-1.88%</td><td class="verdict-neu">NOT IMPACTED</td><td>2443</td><td>2232</td><td>-8.64%</td><td class="verdict-neu">NOT IMPACTED</td><td>9</td></tr>
+<tr><td>servicemasterbrands</td><td>12745</td><td>14476</td><td>13.58%</td><td class="verdict-neu">NOT IMPACTED</td><td>66930</td><td>61160</td><td>-8.62%</td><td class="verdict-neu">NOT IMPACTED</td><td>1459</td></tr>
+<tr><td>ypm</td><td>11980</td><td>12610</td><td>5.26%</td><td class="verdict-neu">NOT IMPACTED</td><td>54469</td><td>49837</td><td>-8.50%</td><td class="verdict-neu">NOT IMPACTED</td><td>1999</td></tr>
+<tr><td>officedepot</td><td>114821</td><td>110794</td><td>-3.51%</td><td class="verdict-neu">NOT IMPACTED</td><td>164726</td><td>151318</td><td>-8.14%</td><td class="verdict-neu">NOT IMPACTED</td><td>1727</td></tr>
+<tr><td>galmangroup</td><td>1091</td><td>1114</td><td>2.11%</td><td class="verdict-neu">NOT IMPACTED</td><td>3924</td><td>3605</td><td>-8.13%</td><td class="verdict-neu">NOT IMPACTED</td><td>47</td></tr>
+<tr><td>workoutanytime</td><td>6134</td><td>758</td><td>-87.64%</td><td class="verdict-neg">NEG IMPACTED</td><td>2908</td><td>2673</td><td>-8.08%</td><td class="verdict-neu">NOT IMPACTED</td><td>183</td></tr>
+<tr><td>newsouthwindow</td><td>152</td><td>116</td><td>-23.68%</td><td class="verdict-neg">NEG IMPACTED</td><td>543</td><td>500</td><td>-7.92%</td><td class="verdict-neu">NOT IMPACTED</td><td>10</td></tr>
+<tr><td>hnncommunities</td><td>2430</td><td>2461</td><td>1.28%</td><td class="verdict-neu">NOT IMPACTED</td><td>3228</td><td>2977</td><td>-7.78%</td><td class="verdict-neu">NOT IMPACTED</td><td>36</td></tr>
+<tr><td>salomon</td><td>501889</td><td>491815</td><td>-2.01%</td><td class="verdict-neu">NOT IMPACTED</td><td>21696</td><td>20014</td><td>-7.75%</td><td class="verdict-neu">NOT IMPACTED</td><td>48</td></tr>
+<tr><td>amedisys</td><td>3289</td><td>3188</td><td>-3.07%</td><td class="verdict-neu">NOT IMPACTED</td><td>22416</td><td>20800</td><td>-7.21%</td><td class="verdict-neu">NOT IMPACTED</td><td>517</td></tr>
+<tr><td>regalmedical</td><td>1362</td><td>1314</td><td>-3.52%</td><td class="verdict-neu">NOT IMPACTED</td><td>6987</td><td>6492</td><td>-7.08%</td><td class="verdict-neu">NOT IMPACTED</td><td>198</td></tr>
+<tr><td>travelleaders</td><td>1017</td><td>1074</td><td>5.60%</td><td class="verdict-neu">NOT IMPACTED</td><td>4260</td><td>3975</td><td>-6.69%</td><td class="verdict-neu">NOT IMPACTED</td><td>370</td></tr>
+<tr><td>acmeres</td><td>450</td><td>623</td><td>38.44%</td><td class="verdict-pos">POS IMPACTED</td><td>1640</td><td>1531</td><td>-6.65%</td><td class="verdict-neu">NOT IMPACTED</td><td>23</td></tr>
+<tr><td>ec_barton</td><td>11115</td><td>10943</td><td>-1.55%</td><td class="verdict-neu">NOT IMPACTED</td><td>67037</td><td>62625</td><td>-6.58%</td><td class="verdict-neu">NOT IMPACTED</td><td>126</td></tr>
+<tr><td>farmers</td><td>24537</td><td>24068</td><td>-1.91%</td><td class="verdict-neu">NOT IMPACTED</td><td>124095</td><td>116750</td><td>-5.92%</td><td class="verdict-neu">NOT IMPACTED</td><td>7353</td></tr>
+<tr><td>disney</td><td>6518</td><td>7909</td><td>21.34%</td><td class="verdict-pos">POS IMPACTED</td><td>56760</td><td>53765</td><td>-5.28%</td><td class="verdict-neu">NOT IMPACTED</td><td>21</td></tr>
+<tr><td>skiptown</td><td>922</td><td>1017</td><td>10.30%</td><td class="verdict-neu">NOT IMPACTED</td><td>1166</td><td>1116</td><td>-4.29%</td><td class="verdict-neu">NOT IMPACTED</td><td>3</td></tr>
+<tr><td>autovalue</td><td>18504</td><td>19037</td><td>2.88%</td><td class="verdict-neu">NOT IMPACTED</td><td>63722</td><td>61343</td><td>-3.73%</td><td class="verdict-neu">NOT IMPACTED</td><td>1099</td></tr>
+<tr><td>jjill</td><td>3657</td><td>2420</td><td>-33.83%</td><td class="verdict-neg">NEG IMPACTED</td><td>24118</td><td>23220</td><td>-3.72%</td><td class="verdict-neu">NOT IMPACTED</td><td>241</td></tr>
+<tr><td>morbark_llc</td><td>300</td><td>260</td><td>-13.33%</td><td class="verdict-neu">NOT IMPACTED</td><td>1984</td><td>1914</td><td>-3.53%</td><td class="verdict-neu">NOT IMPACTED</td><td>12</td></tr>
+<tr><td>avg</td><td>114981</td><td>83908</td><td>-27.02%</td><td class="verdict-neg">NEG IMPACTED</td><td>24354</td><td>23705</td><td>-2.66%</td><td class="verdict-neu">NOT IMPACTED</td><td>189</td></tr>
+<tr><td>lkq</td><td>25477</td><td>26608</td><td>4.44%</td><td class="verdict-neu">NOT IMPACTED</td><td>97447</td><td>95011</td><td>-2.50%</td><td class="verdict-neu">NOT IMPACTED</td><td>527</td></tr>
+<tr><td>psav</td><td>140</td><td>124</td><td>-11.43%</td><td class="verdict-neu">NOT IMPACTED</td><td>241</td><td>235</td><td>-2.49%</td><td class="verdict-neu">NOT IMPACTED</td><td>29</td></tr>
+<tr><td>ford</td><td>176974</td><td>172716</td><td>-2.41%</td><td class="verdict-neu">NOT IMPACTED</td><td>429998</td><td>420508</td><td>-2.21%</td><td class="verdict-neu">NOT IMPACTED</td><td>4779</td></tr>
+<tr><td>hammerseed</td><td>1052</td><td>1421</td><td>35.08%</td><td class="verdict-pos">POS IMPACTED</td><td>5740</td><td>5614</td><td>-2.20%</td><td class="verdict-neu">NOT IMPACTED</td><td>81</td></tr>
+<tr><td>zellisresidential</td><td>719</td><td>817</td><td>13.63%</td><td class="verdict-neu">NOT IMPACTED</td><td>604</td><td>594</td><td>-1.66%</td><td class="verdict-neu">NOT IMPACTED</td><td>18</td></tr>
+<tr><td>hfg</td><td>6720</td><td>7785</td><td>15.85%</td><td class="verdict-pos">POS IMPACTED</td><td>11627</td><td>11446</td><td>-1.56%</td><td class="verdict-neu">NOT IMPACTED</td><td>96</td></tr>
+<tr><td>dill_dinkers</td><td>1774</td><td>2150</td><td>21.20%</td><td class="verdict-pos">POS IMPACTED</td><td>6462</td><td>6364</td><td>-1.52%</td><td class="verdict-neu">NOT IMPACTED</td><td>29</td></tr>
+<tr><td>pgt_innovations</td><td>70</td><td>42</td><td>-40.00%</td><td class="verdict-neg">NEG IMPACTED</td><td>395</td><td>389</td><td>-1.52%</td><td class="verdict-neu">NOT IMPACTED</td><td>2</td></tr>
+<tr><td>baxterap</td><td>919</td><td>837</td><td>-8.92%</td><td class="verdict-neu">NOT IMPACTED</td><td>2691</td><td>2660</td><td>-1.15%</td><td class="verdict-neu">NOT IMPACTED</td><td>24</td></tr>
+<tr><td>amazon</td><td>983411</td><td>1079631</td><td>9.78%</td><td class="verdict-neu">NOT IMPACTED</td><td>56587</td><td>55991</td><td>-1.05%</td><td class="verdict-neu">NOT IMPACTED</td><td>110</td></tr>
+<tr><td>grazecraze</td><td>6369</td><td>8045</td><td>26.31%</td><td class="verdict-pos">POS IMPACTED</td><td>27358</td><td>27290</td><td>-0.25%</td><td class="verdict-neu">NOT IMPACTED</td><td>89</td></tr>
+<tr><td>moz</td><td>1201666</td><td>1308336</td><td>8.88%</td><td class="verdict-neu">NOT IMPACTED</td><td>2665031</td><td>2659161</td><td>-0.22%</td><td class="verdict-neu">NOT IMPACTED</td><td>15487</td></tr>
+<tr><td>am_realty</td><td>49</td><td>0</td><td>-100.00%</td><td class="verdict-neg">NEG IMPACTED</td><td>0</td><td>0</td><td>-</td><td class="verdict-neu">NO DATA</td><td>8</td></tr>
+<tr><td>consultantwebscom_inc</td><td>597</td><td>0</td><td>-100.00%</td><td class="verdict-neg">NEG IMPACTED</td><td>0</td><td>0</td><td>-</td><td class="verdict-neu">NO DATA</td><td>117</td></tr>
+<tr><td>jeffersons_franchise_system</td><td>3916</td><td>0</td><td>-100.00%</td><td class="verdict-neg">NEG IMPACTED</td><td>0</td><td>0</td><td>-</td><td class="verdict-neu">NO DATA</td><td>28</td></tr>
+<tr><td>thunderdome_restaurant_group</td><td>0</td><td>0</td><td>-</td><td class="verdict-neu">NO DATA</td><td>0</td><td>0</td><td>-</td><td class="verdict-neu">NO DATA</td><td>1</td></tr>
+<tr><td>scenesocialmarketing</td><td>15</td><td>19</td><td>26.67%</td><td class="verdict-pos">POS IMPACTED</td><td>39</td><td>39</td><td>0.00%</td><td class="verdict-neu">NOT IMPACTED</td><td>1</td></tr>
+<tr><td>wholefoods</td><td>4863173</td><td>4667576</td><td>-4.02%</td><td class="verdict-neu">NOT IMPACTED</td><td>978816</td><td>983303</td><td>0.46%</td><td class="verdict-neu">NOT IMPACTED</td><td>1536</td></tr>
+<tr><td>merlenorman</td><td>3308</td><td>3790</td><td>14.57%</td><td class="verdict-neu">NOT IMPACTED</td><td>13813</td><td>13962</td><td>1.08%</td><td class="verdict-neu">NOT IMPACTED</td><td>664</td></tr>
+<tr><td>massageenvy</td><td>49592</td><td>53106</td><td>7.09%</td><td class="verdict-neu">NOT IMPACTED</td><td>229931</td><td>233522</td><td>1.56%</td><td class="verdict-neu">NOT IMPACTED</td><td>1004</td></tr>
+<tr><td>thepicklr</td><td>4302</td><td>4251</td><td>-1.19%</td><td class="verdict-neu">NOT IMPACTED</td><td>10606</td><td>10789</td><td>1.73%</td><td class="verdict-neu">NOT IMPACTED</td><td>76</td></tr>
+<tr><td>verlo_mattress</td><td>503</td><td>521</td><td>3.58%</td><td class="verdict-neu">NOT IMPACTED</td><td>1966</td><td>2002</td><td>1.83%</td><td class="verdict-neu">NOT IMPACTED</td><td>47</td></tr>
+<tr><td>dickinson_financial</td><td>1401</td><td>125</td><td>-91.08%</td><td class="verdict-neg">NEG IMPACTED</td><td>302</td><td>309</td><td>2.32%</td><td class="verdict-neu">NOT IMPACTED</td><td>173</td></tr>
+<tr><td>pvhcorporation</td><td>1728</td><td>2096</td><td>21.30%</td><td class="verdict-pos">POS IMPACTED</td><td>11486</td><td>11764</td><td>2.42%</td><td class="verdict-neu">NOT IMPACTED</td><td>31</td></tr>
+<tr><td>traderjoes</td><td>1022510</td><td>1180745</td><td>15.48%</td><td class="verdict-pos">POS IMPACTED</td><td>1116673</td><td>1147252</td><td>2.74%</td><td class="verdict-neu">NOT IMPACTED</td><td>619</td></tr>
+<tr><td>vantage</td><td>821</td><td>1091</td><td>32.89%</td><td class="verdict-pos">POS IMPACTED</td><td>3500</td><td>3605</td><td>3.00%</td><td class="verdict-neu">NOT IMPACTED</td><td>23</td></tr>
+<tr><td>pspg</td><td>449315</td><td>390220</td><td>-13.15%</td><td class="verdict-neu">NOT IMPACTED</td><td>268921</td><td>277564</td><td>3.21%</td><td class="verdict-neu">NOT IMPACTED</td><td>1269</td></tr>
+<tr><td>mutualofamerica</td><td>97</td><td>65</td><td>-32.99%</td><td class="verdict-neg">NEG IMPACTED</td><td>2001</td><td>2072</td><td>3.55%</td><td class="verdict-neu">NOT IMPACTED</td><td>21</td></tr>
+<tr><td>amerant_bank</td><td>1112</td><td>1018</td><td>-8.45%</td><td class="verdict-neu">NOT IMPACTED</td><td>2388</td><td>2482</td><td>3.94%</td><td class="verdict-neu">NOT IMPACTED</td><td>22</td></tr>
+<tr><td>honeybaked</td><td>67069</td><td>80245</td><td>19.65%</td><td class="verdict-pos">POS IMPACTED</td><td>307595</td><td>321144</td><td>4.40%</td><td class="verdict-neu">NOT IMPACTED</td><td>518</td></tr>
+<tr><td>wild_coffee</td><td>4579</td><td>3514</td><td>-23.26%</td><td class="verdict-neg">NEG IMPACTED</td><td>7744</td><td>8125</td><td>4.92%</td><td class="verdict-neu">NOT IMPACTED</td><td>41</td></tr>
+<tr><td>pinots</td><td>2754</td><td>3237</td><td>17.54%</td><td class="verdict-pos">POS IMPACTED</td><td>20320</td><td>21406</td><td>5.34%</td><td class="verdict-neu">NOT IMPACTED</td><td>71</td></tr>
+<tr><td>twist</td><td>10504</td><td>12927</td><td>23.07%</td><td class="verdict-pos">POS IMPACTED</td><td>47101</td><td>49753</td><td>5.63%</td><td class="verdict-neu">NOT IMPACTED</td><td>220</td></tr>
+<tr><td>nbc</td><td>135615</td><td>193002</td><td>42.32%</td><td class="verdict-pos">POS IMPACTED</td><td>388824</td><td>411147</td><td>5.74%</td><td class="verdict-neu">NOT IMPACTED</td><td>715</td></tr>
+<tr><td>berkshirebank</td><td>1794</td><td>2258</td><td>25.86%</td><td class="verdict-pos">POS IMPACTED</td><td>14125</td><td>15335</td><td>8.57%</td><td class="verdict-neu">NOT IMPACTED</td><td>99</td></tr>
+<tr><td>boosterjuice</td><td>21432</td><td>25389</td><td>18.46%</td><td class="verdict-pos">POS IMPACTED</td><td>19418</td><td>21307</td><td>9.73%</td><td class="verdict-neu">NOT IMPACTED</td><td>353</td></tr>
+<tr><td>greenbrierinternational</td><td>304196</td><td>353997</td><td>16.37%</td><td class="verdict-pos">POS IMPACTED</td><td>518850</td><td>574269</td><td>10.68%</td><td class="verdict-neu">NOT IMPACTED</td><td>7221</td></tr>
+<tr><td>shipley</td><td>725533</td><td>772005</td><td>6.41%</td><td class="verdict-neu">NOT IMPACTED</td><td>45136</td><td>50481</td><td>11.84%</td><td class="verdict-neu">NOT IMPACTED</td><td>371</td></tr>
+<tr><td>yoshinoya</td><td>32488</td><td>36854</td><td>13.44%</td><td class="verdict-neu">NOT IMPACTED</td><td>19940</td><td>22413</td><td>12.40%</td><td class="verdict-neu">NOT IMPACTED</td><td>101</td></tr>
+<tr><td>my_place_hotels</td><td>17746</td><td>17842</td><td>0.54%</td><td class="verdict-neu">NOT IMPACTED</td><td>12833</td><td>14522</td><td>13.16%</td><td class="verdict-neu">NOT IMPACTED</td><td>79</td></tr>
+<tr><td>sharkeyscutsforkids</td><td>6944</td><td>8785</td><td>26.51%</td><td class="verdict-pos">POS IMPACTED</td><td>21805</td><td>24776</td><td>13.63%</td><td class="verdict-neu">NOT IMPACTED</td><td>195</td></tr>
+<tr><td>aroma_joes_franchising_llc</td><td>2373</td><td>3286</td><td>38.47%</td><td class="verdict-pos">POS IMPACTED</td><td>4970</td><td>5653</td><td>13.74%</td><td class="verdict-neu">NOT IMPACTED</td><td>38</td></tr>
+<tr><td>miloshamburgers</td><td>3636</td><td>3969</td><td>9.16%</td><td class="verdict-neu">NOT IMPACTED</td><td>7712</td><td>8784</td><td>13.90%</td><td class="verdict-neu">NOT IMPACTED</td><td>24</td></tr>
+<tr><td>jeremiahs_italian_ice</td><td>11049</td><td>13603</td><td>23.12%</td><td class="verdict-pos">POS IMPACTED</td><td>24439</td><td>27903</td><td>14.17%</td><td class="verdict-neu">NOT IMPACTED</td><td>185</td></tr>
+<tr><td>fuzzys</td><td>32847</td><td>39506</td><td>20.27%</td><td class="verdict-pos">POS IMPACTED</td><td>51823</td><td>59194</td><td>14.22%</td><td class="verdict-neu">NOT IMPACTED</td><td>135</td></tr>
+<tr><td>noodles</td><td>479721</td><td>606280</td><td>26.38%</td><td class="verdict-pos">POS IMPACTED</td><td>171530</td><td>196100</td><td>14.32%</td><td class="verdict-neu">NOT IMPACTED</td><td>465</td></tr>
+<tr><td>littlegreek</td><td>23102</td><td>25412</td><td>10.00%</td><td class="verdict-neu">NOT IMPACTED</td><td>15305</td><td>17499</td><td>14.34%</td><td class="verdict-neu">NOT IMPACTED</td><td>52</td></tr>
+<tr><td>horiconbank</td><td>157</td><td>298</td><td>89.81%</td><td class="verdict-pos">POS IMPACTED</td><td>1963</td><td>2248</td><td>14.52%</td><td class="verdict-neu">NOT IMPACTED</td><td>24</td></tr>
+<tr><td>rossdressforless</td><td>3122025</td><td>3649586</td><td>16.90%</td><td class="verdict-pos">POS IMPACTED</td><td>1047983</td><td>1216904</td><td>16.12%</td><td class="verdict-pos">POS IMPACTED</td><td>2264</td></tr>
+<tr><td>turbify</td><td>13</td><td>22</td><td>69.23%</td><td class="verdict-pos">POS IMPACTED</td><td>121</td><td>141</td><td>16.53%</td><td class="verdict-pos">POS IMPACTED</td><td>2</td></tr>
+<tr><td>flyingbiscuitcafe</td><td>35080</td><td>44313</td><td>26.32%</td><td class="verdict-pos">POS IMPACTED</td><td>58018</td><td>67957</td><td>17.13%</td><td class="verdict-pos">POS IMPACTED</td><td>42</td></tr>
+<tr><td>cke</td><td>3852664</td><td>4279289</td><td>11.07%</td><td class="verdict-neu">NOT IMPACTED</td><td>384661</td><td>451519</td><td>17.38%</td><td class="verdict-pos">POS IMPACTED</td><td>2586</td></tr>
+<tr><td>gabes</td><td>24941</td><td>28185</td><td>13.01%</td><td class="verdict-neu">NOT IMPACTED</td><td>55624</td><td>65451</td><td>17.67%</td><td class="verdict-pos">POS IMPACTED</td><td>157</td></tr>
+<tr><td>anotherbrokenegg</td><td>95141</td><td>113429</td><td>19.22%</td><td class="verdict-pos">POS IMPACTED</td><td>121601</td><td>145086</td><td>19.31%</td><td class="verdict-pos">POS IMPACTED</td><td>105</td></tr>
+<tr><td>shake_shack</td><td>163341</td><td>35172</td><td>-78.47%</td><td class="verdict-neg">NEG IMPACTED</td><td>34560</td><td>41245</td><td>19.34%</td><td class="verdict-pos">POS IMPACTED</td><td>353</td></tr>
+<tr><td>spbhospitality</td><td>213031</td><td>250818</td><td>17.74%</td><td class="verdict-pos">POS IMPACTED</td><td>301445</td><td>360939</td><td>19.74%</td><td class="verdict-pos">POS IMPACTED</td><td>515</td></tr>
+<tr><td>thecheesecakefactory</td><td>535938</td><td>583214</td><td>8.82%</td><td class="verdict-neu">NOT IMPACTED</td><td>493070</td><td>592644</td><td>20.19%</td><td class="verdict-pos">POS IMPACTED</td><td>276</td></tr>
+<tr><td>sbarro</td><td>9808</td><td>11622</td><td>18.50%</td><td class="verdict-pos">POS IMPACTED</td><td>14626</td><td>17728</td><td>21.21%</td><td class="verdict-pos">POS IMPACTED</td><td>131</td></tr>
+<tr><td>cottonpatch</td><td>20094</td><td>25134</td><td>25.08%</td><td class="verdict-pos">POS IMPACTED</td><td>30764</td><td>37398</td><td>21.56%</td><td class="verdict-pos">POS IMPACTED</td><td>49</td></tr>
+<tr><td>goldenchick</td><td>336361</td><td>392165</td><td>16.59%</td><td class="verdict-pos">POS IMPACTED</td><td>76264</td><td>92744</td><td>21.61%</td><td class="verdict-pos">POS IMPACTED</td><td>258</td></tr>
+<tr><td>popupbagels</td><td>12653</td><td>18656</td><td>47.44%</td><td class="verdict-pos">POS IMPACTED</td><td>16093</td><td>19790</td><td>22.97%</td><td class="verdict-pos">POS IMPACTED</td><td>20</td></tr>
+<tr><td>arcgroup</td><td>8622</td><td>10191</td><td>18.20%</td><td class="verdict-pos">POS IMPACTED</td><td>17274</td><td>21383</td><td>23.79%</td><td class="verdict-pos">POS IMPACTED</td><td>36</td></tr>
+<tr><td>abuelos</td><td>5560</td><td>6632</td><td>19.28%</td><td class="verdict-pos">POS IMPACTED</td><td>18108</td><td>22422</td><td>23.82%</td><td class="verdict-pos">POS IMPACTED</td><td>15</td></tr>
+<tr><td>elevated_brands</td><td>8820</td><td>11901</td><td>34.93%</td><td class="verdict-pos">POS IMPACTED</td><td>15222</td><td>18935</td><td>24.39%</td><td class="verdict-pos">POS IMPACTED</td><td>26</td></tr>
+<tr><td>bellacinos1</td><td>4759</td><td>6057</td><td>27.27%</td><td class="verdict-pos">POS IMPACTED</td><td>20634</td><td>25827</td><td>25.17%</td><td class="verdict-pos">POS IMPACTED</td><td>41</td></tr>
+<tr><td>oldchicago</td><td>17107</td><td>20952</td><td>22.48%</td><td class="verdict-pos">POS IMPACTED</td><td>30874</td><td>38831</td><td>25.77%</td><td class="verdict-pos">POS IMPACTED</td><td>53</td></tr>
+<tr><td>yourpiefranchising</td><td>10881</td><td>12824</td><td>17.86%</td><td class="verdict-pos">POS IMPACTED</td><td>18998</td><td>24096</td><td>26.83%</td><td class="verdict-pos">POS IMPACTED</td><td>65</td></tr>
+<tr><td>pelicanssnoballs</td><td>782</td><td>971</td><td>24.17%</td><td class="verdict-pos">POS IMPACTED</td><td>2310</td><td>3471</td><td>50.26%</td><td class="verdict-pos">POS IMPACTED</td><td>70</td></tr>
+    </table>
+    
+    <div class="footer">
+        <p>Generated: December 18, 2025</p>
+        <p>Source: Tenants Database - MeetSOCi</p>
+    </div>
+
+    <script>
+        // Maps Chart
+        new Chart(document.getElementById('chartMaps'), {
+            type: 'pie',
+            data: {
+                labels: ['Not Impacted (54%)', 'Positively Impacted (32%)', 'Negatively Impacted (13%)'],
+                datasets: [{
+                    data: [86, 51, 21],
+                    backgroundColor: ['#5f6368', '#188038', '#d93025'],
+                    borderWidth: 2,
+                    borderColor: '#fff'
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: { position: 'bottom', labels: { font: { size: 11 } } }
+                }
+            }
+        });
+
+        // Search Chart
+        new Chart(document.getElementById('chartSearch'), {
+            type: 'pie',
+            data: {
+                labels: ['Not Impacted (58%)', 'Positively Impacted (13%)', 'Negatively Impacted (26%)'],
+                datasets: [{
+                    data: [93, 20, 42],
+                    backgroundColor: ['#5f6368', '#188038', '#d93025'],
+                    borderWidth: 2,
+                    borderColor: '#fff'
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: { position: 'bottom', labels: { font: { size: 11 } } }
+                }
+            }
+        });
+    </script>
+</body>
+</html>
