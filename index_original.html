@@ -1,0 +1,612 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Core Update Impact Dashboard - December 2025</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0f0c29 0%, #302b63 50%, #24243e 100%);
+            min-height: 100vh;
+            color: #fff;
+            padding: 20px;
+        }
+        
+        /* Login Screen */
+        .login-screen {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, #0f0c29 0%, #302b63 50%, #24243e 100%);
+            z-index: 1000;
+        }
+        .login-box {
+            background: rgba(255,255,255,0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 16px;
+            padding: 40px;
+            text-align: center;
+            border: 1px solid rgba(255,255,255,0.1);
+            width: 100%;
+            max-width: 400px;
+        }
+        .login-box h2 {
+            margin-bottom: 30px;
+            background: linear-gradient(90deg, #00d2ff, #3a7bd5);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .login-box input {
+            width: 100%;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 8px;
+            border: 1px solid rgba(255,255,255,0.2);
+            background: rgba(255,255,255,0.1);
+            color: #fff;
+            font-size: 16px;
+        }
+        .login-box input::placeholder { color: #888; }
+        .login-box button {
+            width: 100%;
+            padding: 15px;
+            margin-top: 20px;
+            border-radius: 8px;
+            border: none;
+            background: linear-gradient(90deg, #00d2ff, #3a7bd5);
+            color: #fff;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        .login-box button:hover { transform: scale(1.02); }
+        .login-error {
+            color: #ff6b6b;
+            margin-top: 15px;
+            display: none;
+        }
+        .hidden { display: none !important; }
+        
+        .dashboard {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        header {
+            text-align: center;
+            padding: 30px 0;
+        }
+        header h1 {
+            font-size: 2.5em;
+            background: linear-gradient(90deg, #00d2ff, #3a7bd5);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 10px;
+        }
+        header p { color: #aaa; font-size: 1.1em; }
+        .stats-row {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+            margin: 30px 0;
+        }
+        .stat-card {
+            background: rgba(255,255,255,0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 16px;
+            padding: 25px;
+            text-align: center;
+            border: 1px solid rgba(255,255,255,0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 40px rgba(0,210,255,0.2);
+        }
+        .stat-value {
+            font-size: 3em;
+            font-weight: bold;
+            background: linear-gradient(90deg, #00d2ff, #3a7bd5);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .stat-label { color: #aaa; margin-top: 5px; }
+        .stat-card.negative .stat-value { background: linear-gradient(90deg, #ff416c, #ff4b2b); -webkit-background-clip: text; }
+        .stat-card.positive .stat-value { background: linear-gradient(90deg, #11998e, #38ef7d); -webkit-background-clip: text; }
+        
+        .charts-section {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 30px;
+            margin: 30px 0;
+        }
+        .chart-card {
+            background: rgba(255,255,255,0.05);
+            backdrop-filter: blur(10px);
+            border-radius: 16px;
+            padding: 25px;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        .chart-card h3 { text-align: center; margin-bottom: 20px; font-size: 1.3em; }
+        .chart-container { position: relative; height: 300px; }
+        
+        .filters {
+            background: rgba(255,255,255,0.05);
+            backdrop-filter: blur(10px);
+            border-radius: 16px;
+            padding: 20px;
+            margin: 30px 0;
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+            align-items: center;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        .filter-group { display: flex; flex-direction: column; gap: 5px; }
+        .filter-group label { color: #aaa; font-size: 0.85em; }
+        .filter-group select, .filter-group input {
+            padding: 10px 15px;
+            border-radius: 8px;
+            border: 1px solid rgba(255,255,255,0.2);
+            background: rgba(255,255,255,0.1);
+            color: #fff;
+            font-size: 14px;
+            min-width: 180px;
+        }
+        .filter-group input::placeholder { color: #888; }
+        
+        .table-container {
+            background: rgba(255,255,255,0.05);
+            backdrop-filter: blur(10px);
+            border-radius: 16px;
+            padding: 25px;
+            border: 1px solid rgba(255,255,255,0.1);
+            overflow-x: auto;
+        }
+        table { width: 100%; border-collapse: collapse; font-size: 13px; }
+        th, td { padding: 12px 15px; text-align: left; border-bottom: 1px solid rgba(255,255,255,0.1); }
+        th { background: rgba(0,210,255,0.2); font-weight: 600; cursor: pointer; user-select: none; }
+        th:hover { background: rgba(0,210,255,0.3); }
+        tr:hover { background: rgba(255,255,255,0.05); }
+        .badge { padding: 5px 12px; border-radius: 20px; font-size: 11px; font-weight: bold; }
+        .badge-neg { background: rgba(255,65,108,0.3); color: #ff6b6b; }
+        .badge-pos { background: rgba(56,239,125,0.3); color: #38ef7d; }
+        .badge-neu { background: rgba(255,255,255,0.2); color: #aaa; }
+        
+        .insight-banner {
+            background: linear-gradient(90deg, rgba(255,65,108,0.2), rgba(255,75,43,0.2));
+            border-left: 4px solid #ff416c;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 30px 0;
+        }
+        .insight-banner h4 { margin-bottom: 10px; color: #ff6b6b; }
+        
+        footer { text-align: center; padding: 30px; color: #666; font-size: 12px; }
+        
+        @media (max-width: 768px) {
+            .stats-row { grid-template-columns: repeat(2, 1fr); }
+            .charts-section { grid-template-columns: 1fr; }
+            .filters { flex-direction: column; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Login Screen -->
+    <div class="login-screen" id="loginScreen">
+        <div class="login-box">
+            <h2>Core Update Report</h2>
+            <p style="color:#aaa;margin-bottom:20px;">Enter credentials to access</p>
+            <input type="text" id="username" placeholder="Username">
+            <input type="password" id="password" placeholder="Password">
+            <button onclick="login()">Access Dashboard</button>
+            <p class="login-error" id="loginError">Invalid credentials</p>
+        </div>
+    </div>
+
+    <!-- Dashboard (hidden until login) -->
+    <div class="dashboard hidden" id="dashboard">
+        <header>
+            <p style="color:#00d2ff;font-size:0.9em;margin-bottom:5px;">Created by SearchMas</p>
+            <h1>Google Core Update Impact</h1>
+            <p>December 2025 | Analysis Period: Dec 9-10 vs Dec 11-12</p>
+        </header>
+
+        <div class="stats-row">
+            <div class="stat-card">
+                <div class="stat-value">159</div>
+                <div class="stat-label">Clients Analyzed</div>
+            </div>
+            <div class="stat-card negative">
+                <div class="stat-value">42</div>
+                <div class="stat-label">Search Negatively Impacted</div>
+            </div>
+            <div class="stat-card negative">
+                <div class="stat-value">21</div>
+                <div class="stat-label">Maps Negatively Impacted</div>
+            </div>
+            <div class="stat-card positive">
+                <div class="stat-value">51</div>
+                <div class="stat-label">Maps Positively Impacted</div>
+            </div>
+        </div>
+
+        <div class="insight-banner">
+            <h4>Key Finding</h4>
+            <p>Search impressions were <strong>2x more affected</strong> than Maps. 26% of clients saw significant drops in Search vs only 13% in Maps.</p>
+        </div>
+
+        <div class="charts-section">
+            <div class="chart-card">
+                <h3>Maps Impact Distribution</h3>
+                <div class="chart-container"><canvas id="mapsChart"></canvas></div>
+            </div>
+            <div class="chart-card">
+                <h3>Search Impact Distribution</h3>
+                <div class="chart-container"><canvas id="searchChart"></canvas></div>
+            </div>
+            <div class="chart-card">
+                <h3>Maps vs Search Comparison</h3>
+                <div class="chart-container"><canvas id="comparisonChart"></canvas></div>
+            </div>
+            <div class="chart-card">
+                <h3>Top 10 Most Impacted (Search)</h3>
+                <div class="chart-container"><canvas id="top10Chart"></canvas></div>
+            </div>
+        </div>
+
+        <div class="filters">
+            <div class="filter-group">
+                <label>Search Client</label>
+                <input type="text" id="searchInput" placeholder="Type client name...">
+            </div>
+            <div class="filter-group">
+                <label>Maps Verdict</label>
+                <select id="filterMaps">
+                    <option value="all">All</option>
+                    <option value="AFECTADO NEG">Negatively Impacted</option>
+                    <option value="NO AFECTADO">Not Impacted</option>
+                    <option value="AFECTADO POS">Positively Impacted</option>
+                </select>
+            </div>
+            <div class="filter-group">
+                <label>Search Verdict</label>
+                <select id="filterSearch">
+                    <option value="all">All</option>
+                    <option value="AFECTADO NEG">Negatively Impacted</option>
+                    <option value="NO AFECTADO">Not Impacted</option>
+                    <option value="AFECTADO POS">Positively Impacted</option>
+                </select>
+            </div>
+            <div class="filter-group">
+                <label>Sort By</label>
+                <select id="sortBy">
+                    <option value="search_var">Search Variation</option>
+                    <option value="maps_var">Maps Variation</option>
+                    <option value="client">Client Name</option>
+                    <option value="locations">Locations</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="table-container">
+            <table id="dataTable">
+                <thead>
+                    <tr>
+                        <th>Client</th>
+                        <th>Maps Before</th>
+                        <th>Maps After</th>
+                        <th>Maps Var %</th>
+                        <th>Maps Verdict</th>
+                        <th>Search Before</th>
+                        <th>Search After</th>
+                        <th>Search Var %</th>
+                        <th>Search Verdict</th>
+                        <th>Locations</th>
+                    </tr>
+                </thead>
+                <tbody id="tableBody"></tbody>
+            </table>
+        </div>
+
+        <footer>Generated: December 18, 2025 | Source: MeetSOCi Tenants Database</footer>
+    </div>
+
+    <script>
+        // ============ CREDENTIALS ============
+        const VALID_USER = 'soci';
+        const VALID_PASS = 'coreupdate2025';
+        // =====================================
+
+        function login() {
+            const user = document.getElementById('username').value;
+            const pass = document.getElementById('password').value;
+            
+            if (user === VALID_USER && pass === VALID_PASS) {
+                document.getElementById('loginScreen').classList.add('hidden');
+                document.getElementById('dashboard').classList.remove('hidden');
+                sessionStorage.setItem('authenticated', 'true');
+                initDashboard();
+            } else {
+                document.getElementById('loginError').style.display = 'block';
+            }
+        }
+
+        // Check if already authenticated
+        if (sessionStorage.getItem('authenticated') === 'true') {
+            document.getElementById('loginScreen').classList.add('hidden');
+            document.getElementById('dashboard').classList.remove('hidden');
+            window.onload = initDashboard;
+        }
+
+        // Enter key to login
+        document.getElementById('password').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') login();
+        });
+
+        const clientData = [
+{client:'abuelos',maps_before:5560,search_before:18108,maps_after:6632,search_after:22422,maps_var:19.28,search_var:23.82,locations:15,maps_verdict:'AFECTADO POS',search_verdict:'AFECTADO POS'},
+{client:'acmeres',maps_before:450,search_before:1640,maps_after:623,search_after:1531,maps_var:38.44,search_var:-6.65,locations:23,maps_verdict:'AFECTADO POS',search_verdict:'NO AFECTADO'},
+{client:'advenirazora',maps_before:1510,search_before:5222,maps_after:1416,search_after:4379,maps_var:-6.23,search_var:-16.14,locations:37,maps_verdict:'NO AFECTADO',search_verdict:'AFECTADO NEG'},
+{client:'afca',maps_before:26467,search_before:26466,maps_after:26111,search_after:23399,maps_var:-1.35,search_var:-11.59,locations:170,maps_verdict:'NO AFECTADO',search_verdict:'NO AFECTADO'},
+{client:'afcga',maps_before:753,search_before:5148,maps_after:1477,search_after:2455,maps_var:96.15,search_var:-52.31,locations:111,maps_verdict:'AFECTADO POS',search_verdict:'AFECTADO NEG'},
+{client:'agliving',maps_before:1421,search_before:2710,maps_after:1213,search_after:1168,maps_var:-14.64,search_var:-56.90,locations:22,maps_verdict:'NO AFECTADO',search_verdict:'AFECTADO NEG'},
+{client:'agpro',maps_before:6675,search_before:9340,maps_after:2903,search_after:4722,maps_var:-56.51,search_var:-49.44,locations:84,maps_verdict:'AFECTADO NEG',search_verdict:'AFECTADO NEG'},
+{client:'am_realty',maps_before:49,search_before:0,maps_after:0,search_after:0,maps_var:-100.00,search_var:null,locations:8,maps_verdict:'AFECTADO NEG',search_verdict:'SIN DATOS'},
+{client:'amazon',maps_before:983411,search_before:56587,maps_after:1079631,search_after:55991,maps_var:9.78,search_var:-1.05,locations:110,maps_verdict:'NO AFECTADO',search_verdict:'NO AFECTADO'},
+{client:'amedisys',maps_before:3289,search_before:22416,maps_after:3188,search_after:20800,maps_var:-3.07,search_var:-7.21,locations:517,maps_verdict:'NO AFECTADO',search_verdict:'NO AFECTADO'},
+{client:'amerant_bank',maps_before:1112,search_before:2388,maps_after:1018,search_after:2482,maps_var:-8.45,search_var:3.94,locations:22,maps_verdict:'NO AFECTADO',search_verdict:'NO AFECTADO'},
+{client:'anchorpacifica',maps_before:508,search_before:1432,maps_after:561,search_after:1204,maps_var:10.43,search_var:-15.92,locations:31,maps_verdict:'NO AFECTADO',search_verdict:'AFECTADO NEG'},
+{client:'angelcorona',maps_before:28,search_before:12,maps_after:14,search_after:3,maps_var:-50.00,search_var:-75.00,locations:4,maps_verdict:'AFECTADO NEG',search_verdict:'AFECTADO NEG'},
+{client:'anotherbrokenegg',maps_before:95141,search_before:121601,maps_after:113429,search_after:145086,maps_var:19.22,search_var:19.31,locations:105,maps_verdict:'AFECTADO POS',search_verdict:'AFECTADO POS'},
+{client:'aptsharedsvcs',maps_before:2091,search_before:5209,maps_after:2202,search_after:4487,maps_var:5.31,search_var:-13.86,locations:98,maps_verdict:'NO AFECTADO',search_verdict:'NO AFECTADO'},
+{client:'arcgroup',maps_before:8622,search_before:17274,maps_after:10191,search_after:21383,maps_var:18.20,search_var:23.79,locations:36,maps_verdict:'AFECTADO POS',search_verdict:'AFECTADO POS'},
+{client:'ari',maps_before:1242,search_before:3040,maps_after:1420,search_after:1455,maps_var:14.33,search_var:-52.14,locations:41,maps_verdict:'NO AFECTADO',search_verdict:'AFECTADO NEG'},
+{client:'aroma_joes_franchising_llc',maps_before:2373,search_before:4970,maps_after:3286,search_after:5653,maps_var:38.47,search_var:13.74,locations:38,maps_verdict:'AFECTADO POS',search_verdict:'NO AFECTADO'},
+{client:'atcdevelopment',maps_before:304,search_before:1973,maps_after:336,search_after:1003,maps_var:10.53,search_var:-49.16,locations:11,maps_verdict:'NO AFECTADO',search_verdict:'AFECTADO NEG'},
+{client:'autovalue',maps_before:18504,search_before:63722,maps_after:19037,search_after:61343,maps_var:2.88,search_var:-3.73,locations:1099,maps_verdict:'NO AFECTADO',search_verdict:'NO AFECTADO'},
+{client:'avenueshomecare',maps_before:100,search_before:756,maps_after:102,search_after:535,maps_var:2.00,search_var:-29.23,locations:22,maps_verdict:'NO AFECTADO',search_verdict:'AFECTADO NEG'},
+{client:'avg',maps_before:114981,search_before:24354,maps_after:83908,search_after:23705,maps_var:-27.02,search_var:-2.66,locations:189,maps_verdict:'AFECTADO NEG',search_verdict:'NO AFECTADO'},
+{client:'baxterap',maps_before:919,search_before:2691,maps_after:837,search_after:2660,maps_var:-8.92,search_var:-1.15,locations:24,maps_verdict:'NO AFECTADO',search_verdict:'NO AFECTADO'},
+{client:'bellacinos1',maps_before:4759,search_before:20634,maps_after:6057,search_after:25827,maps_var:27.27,search_var:25.17,locations:41,maps_verdict:'AFECTADO POS',search_verdict:'AFECTADO POS'},
+{client:'bender_realty',maps_before:56,search_before:165,maps_after:62,search_after:144,maps_var:10.71,search_var:-12.73,locations:6,maps_verdict:'NO AFECTADO',search_verdict:'NO AFECTADO'},
+{client:'berkshirebank',maps_before:1794,search_before:14125,maps_after:2258,search_after:15335,maps_var:25.86,search_var:8.57,locations:99,maps_verdict:'AFECTADO POS',search_verdict:'NO AFECTADO'},
+{client:'bigos',maps_before:2089,search_before:4352,maps_after:2013,search_after:3911,maps_var:-3.64,search_var:-10.13,locations:55,maps_verdict:'NO AFECTADO',search_verdict:'NO AFECTADO'},
+{client:'block_multifamily_group',maps_before:1443,search_before:4686,maps_after:1334,search_after:4177,maps_var:-7.55,search_var:-10.86,locations:38,maps_verdict:'NO AFECTADO',search_verdict:'NO AFECTADO'},
+{client:'boosterjuice',maps_before:21432,search_before:19418,maps_after:25389,search_after:21307,maps_var:18.46,search_var:9.73,locations:353,maps_verdict:'AFECTADO POS',search_verdict:'NO AFECTADO'},
+{client:'borger',maps_before:295,search_before:644,maps_after:364,search_after:546,maps_var:23.39,search_var:-15.22,locations:7,maps_verdict:'AFECTADO POS',search_verdict:'AFECTADO NEG'},
+{client:'carlisle_residential',maps_before:405,search_before:2546,maps_after:484,search_after:2184,maps_var:19.51,search_var:-14.22,locations:17,maps_verdict:'AFECTADO POS',search_verdict:'NO AFECTADO'},
+{client:'celebreeschool',maps_before:1707,search_before:3616,maps_after:1546,search_after:3220,maps_var:-9.43,search_var:-10.95,locations:80,maps_verdict:'NO AFECTADO',search_verdict:'NO AFECTADO'},
+{client:'chickensaladchick',maps_before:81089,search_before:161818,maps_after:88884,search_after:83451,maps_var:9.61,search_var:-48.43,locations:327,maps_verdict:'NO AFECTADO',search_verdict:'AFECTADO NEG'},
+{client:'cke',maps_before:3852664,search_before:384661,maps_after:4279289,search_after:451519,maps_var:11.07,search_var:17.38,locations:2586,maps_verdict:'NO AFECTADO',search_verdict:'AFECTADO POS'},
+{client:'clockwork',maps_before:2189,search_before:11068,maps_after:2516,search_after:5222,maps_var:14.94,search_var:-52.82,locations:213,maps_verdict:'NO AFECTADO',search_verdict:'AFECTADO NEG'},
+{client:'closetfactory',maps_before:813,search_before:4870,maps_after:931,search_after:2141,maps_var:14.51,search_var:-56.04,locations:69,maps_verdict:'NO AFECTADO',search_verdict:'AFECTADO NEG'},
+{client:'consultantwebscom_inc',maps_before:597,search_before:0,maps_after:0,search_after:0,maps_var:-100.00,search_var:null,locations:117,maps_verdict:'AFECTADO NEG',search_verdict:'SIN DATOS'},
+{client:'cottonpatch',maps_before:20094,search_before:30764,maps_after:25134,search_after:37398,maps_var:25.08,search_var:21.56,locations:49,maps_verdict:'AFECTADO POS',search_verdict:'AFECTADO POS'},
+{client:'credit_central_llc',maps_before:695,search_before:8397,maps_after:788,search_after:5115,maps_var:13.38,search_var:-39.09,locations:139,maps_verdict:'NO AFECTADO',search_verdict:'AFECTADO NEG'},
+{client:'cymliving',maps_before:1549,search_before:10921,maps_after:1459,search_after:9160,maps_var:-5.81,search_var:-16.12,locations:65,maps_verdict:'NO AFECTADO',search_verdict:'AFECTADO NEG'},
+{client:'decadental',maps_before:1248,search_before:689,maps_after:194,search_after:558,maps_var:-84.46,search_var:-19.01,locations:82,maps_verdict:'AFECTADO NEG',search_verdict:'AFECTADO NEG'},
+{client:'dexmedia',maps_before:971,search_before:573,maps_after:142,search_after:490,maps_var:-85.38,search_var:-14.49,locations:82,maps_verdict:'AFECTADO NEG',search_verdict:'NO AFECTADO'},
+{client:'dickinson_financial',maps_before:1401,search_before:302,maps_after:125,search_after:309,maps_var:-91.08,search_var:2.32,locations:173,maps_verdict:'AFECTADO NEG',search_verdict:'NO AFECTADO'},
+{client:'dill_dinkers',maps_before:1774,search_before:6462,maps_after:2150,search_after:6364,maps_var:21.20,search_var:-1.52,locations:29,maps_verdict:'AFECTADO POS',search_verdict:'NO AFECTADO'},
+{client:'discoverypoint',maps_before:504,search_before:983,maps_after:448,search_after:882,maps_var:-11.11,search_var:-10.27,locations:21,maps_verdict:'NO AFECTADO',search_verdict:'NO AFECTADO'},
+{client:'disney',maps_before:6518,search_before:56760,maps_after:7909,search_after:53765,maps_var:21.34,search_var:-5.28,locations:21,maps_verdict:'AFECTADO POS',search_verdict:'NO AFECTADO'},
+{client:'dsl',maps_before:11041,search_before:39664,maps_after:12013,search_after:35148,maps_var:8.80,search_var:-11.39,locations:370,maps_verdict:'NO AFECTADO',search_verdict:'NO AFECTADO'},
+{client:'dynabrade',maps_before:55,search_before:316,maps_after:61,search_after:252,maps_var:10.91,search_var:-20.25,locations:8,maps_verdict:'NO AFECTADO',search_verdict:'AFECTADO NEG'},
+{client:'ec_barton',maps_before:11115,search_before:67037,maps_after:10943,search_after:62625,maps_var:-1.55,search_var:-6.58,locations:126,maps_verdict:'NO AFECTADO',search_verdict:'NO AFECTADO'},
+{client:'elegance',maps_before:440,search_before:2752,maps_after:458,search_after:2299,maps_var:4.09,search_var:-16.46,locations:19,maps_verdict:'NO AFECTADO',search_verdict:'AFECTADO NEG'},
+{client:'elevated_brands',maps_before:8820,search_before:15222,maps_after:11901,search_after:18935,maps_var:34.93,search_var:24.39,locations:26,maps_verdict:'AFECTADO POS',search_verdict:'AFECTADO POS'},
+{client:'elmecommunities',maps_before:455,search_before:1711,maps_after:458,search_after:1460,maps_var:0.66,search_var:-14.67,locations:9,maps_verdict:'NO AFECTADO',search_verdict:'NO AFECTADO'},
+{client:'embrey',maps_before:3380,search_before:8742,maps_after:3312,search_after:7336,maps_var:-2.01,search_var:-16.08,locations:42,maps_verdict:'NO AFECTADO',search_verdict:'AFECTADO NEG'},
+{client:'farmers',maps_before:24537,search_before:124095,maps_after:24068,search_after:116750,maps_var:-1.91,search_var:-5.92,locations:7353,maps_verdict:'NO AFECTADO',search_verdict:'NO AFECTADO'},
+{client:'firstbank',maps_before:1880,search_before:7416,maps_after:1843,search_after:3585,maps_var:-1.97,search_var:-51.66,locations:95,maps_verdict:'NO AFECTADO',search_verdict:'AFECTADO NEG'},
+{client:'flyingbiscuitcafe',maps_before:35080,search_before:58018,maps_after:44313,search_after:67957,maps_var:26.32,search_var:17.13,locations:42,maps_verdict:'AFECTADO POS',search_verdict:'AFECTADO POS'},
+{client:'ford',maps_before:176974,search_before:429998,maps_after:172716,search_after:420508,maps_var:-2.41,search_var:-2.21,locations:4779,maps_verdict:'NO AFECTADO',search_verdict:'NO AFECTADO'},
+{client:'fpmg',maps_before:1339,search_before:3007,maps_after:1425,search_after:2702,maps_var:6.42,search_var:-10.14,locations:44,maps_verdict:'NO AFECTADO',search_verdict:'NO AFECTADO'},
+{client:'fuzzys',maps_before:32847,search_before:51823,maps_after:39506,search_after:59194,maps_var:20.27,search_var:14.22,locations:135,maps_verdict:'AFECTADO POS',search_verdict:'NO AFECTADO'},
+{client:'gabes',maps_before:24941,search_before:55624,maps_after:28185,search_after:65451,maps_var:13.01,search_var:17.67,locations:157,maps_verdict:'NO AFECTADO',search_verdict:'AFECTADO POS'},
+{client:'galmangroup',maps_before:1091,search_before:3924,maps_after:1114,search_after:3605,maps_var:2.11,search_var:-8.13,locations:47,maps_verdict:'NO AFECTADO',search_verdict:'NO AFECTADO'},
+{client:'goldenchick',maps_before:336361,search_before:76264,maps_after:392165,search_after:92744,maps_var:16.59,search_var:21.61,locations:258,maps_verdict:'AFECTADO POS',search_verdict:'AFECTADO POS'},
+{client:'gostoreit',maps_before:2653,search_before:7585,maps_after:3079,search_after:3698,maps_var:16.06,search_var:-51.25,locations:188,maps_verdict:'AFECTADO POS',search_verdict:'AFECTADO NEG'},
+{client:'grazecraze',maps_before:6369,search_before:27358,maps_after:8045,search_after:27290,maps_var:26.31,search_var:-0.25,locations:89,maps_verdict:'AFECTADO POS',search_verdict:'NO AFECTADO'},
+{client:'greenbrierinternational',maps_before:304196,search_before:518850,maps_after:353997,search_after:574269,maps_var:16.37,search_var:10.68,locations:7221,maps_verdict:'AFECTADO POS',search_verdict:'NO AFECTADO'},
+{client:'hammerseed',maps_before:1052,search_before:5740,maps_after:1421,search_after:5614,maps_var:35.08,search_var:-2.20,locations:81,maps_verdict:'AFECTADO POS',search_verdict:'NO AFECTADO'},
+{client:'healthsourcechiropractic',maps_before:168,search_before:623,maps_after:184,search_after:506,maps_var:9.52,search_var:-18.78,locations:18,maps_verdict:'NO AFECTADO',search_verdict:'AFECTADO NEG'},
+{client:'hfg',maps_before:6720,search_before:11627,maps_after:7785,search_after:11446,maps_var:15.85,search_var:-1.56,locations:96,maps_verdict:'AFECTADO POS',search_verdict:'NO AFECTADO'},
+{client:'hnncommunities',maps_before:2430,search_before:3228,maps_after:2461,search_after:2977,maps_var:1.28,search_var:-7.78,locations:36,maps_verdict:'NO AFECTADO',search_verdict:'NO AFECTADO'},
+{client:'honeybaked',maps_before:67069,search_before:307595,maps_after:80245,search_after:321144,maps_var:19.65,search_var:4.40,locations:518,maps_verdict:'AFECTADO POS',search_verdict:'NO AFECTADO'},
+{client:'horiconbank',maps_before:157,search_before:1963,maps_after:298,search_after:2248,maps_var:89.81,search_var:14.52,locations:24,maps_verdict:'AFECTADO POS',search_verdict:'NO AFECTADO'},
+{client:'hsf',maps_before:5536,search_before:18122,maps_after:6366,search_after:8438,maps_var:14.99,search_var:-53.44,locations:1780,maps_verdict:'NO AFECTADO',search_verdict:'AFECTADO NEG'},
+{client:'imt',maps_before:4394,search_before:9883,maps_after:4554,search_after:8730,maps_var:3.64,search_var:-11.67,locations:53,maps_verdict:'NO AFECTADO',search_verdict:'NO AFECTADO'},
+{client:'jeffersons_franchise_system',maps_before:3916,search_before:0,maps_after:0,search_after:0,maps_var:-100.00,search_var:null,locations:28,maps_verdict:'AFECTADO NEG',search_verdict:'SIN DATOS'},
+{client:'jeremiahs_italian_ice',maps_before:11049,search_before:24439,maps_after:13603,search_after:27903,maps_var:23.12,search_var:14.17,locations:185,maps_verdict:'AFECTADO POS',search_verdict:'NO AFECTADO'},
+{client:'jjill',maps_before:3657,search_before:24118,maps_after:2420,search_after:23220,maps_var:-33.83,search_var:-3.72,locations:241,maps_verdict:'AFECTADO NEG',search_verdict:'NO AFECTADO'},
+{client:'keller',maps_before:829,search_before:2142,maps_after:843,search_after:907,maps_var:1.69,search_var:-57.66,locations:18,maps_verdict:'NO AFECTADO',search_verdict:'AFECTADO NEG'},
+{client:'kryuus',maps_before:43303,search_before:188732,maps_after:41558,search_after:171204,maps_var:-4.03,search_var:-9.29,locations:4645,maps_verdict:'NO AFECTADO',search_verdict:'NO AFECTADO'},
+{client:'little_kickers',maps_before:206,search_before:2181,maps_after:264,search_after:1905,maps_var:28.16,search_var:-12.65,locations:69,maps_verdict:'AFECTADO POS',search_verdict:'NO AFECTADO'},
+{client:'littlegreek',maps_before:23102,search_before:15305,maps_after:25412,search_after:17499,maps_var:10.00,search_var:14.34,locations:52,maps_verdict:'NO AFECTADO',search_verdict:'NO AFECTADO'},
+{client:'lkq',maps_before:25477,search_before:97447,maps_after:26608,search_after:95011,maps_var:4.44,search_var:-2.50,locations:527,maps_verdict:'NO AFECTADO',search_verdict:'NO AFECTADO'},
+{client:'luma_residential',maps_before:1720,search_before:4343,maps_after:1827,search_after:3768,maps_var:6.22,search_var:-13.24,locations:30,maps_verdict:'NO AFECTADO',search_verdict:'NO AFECTADO'},
+{client:'massageenvy',maps_before:49592,search_before:229931,maps_after:53106,search_after:233522,maps_var:7.09,search_var:1.56,locations:1004,maps_verdict:'NO AFECTADO',search_verdict:'NO AFECTADO'},
+{client:'merlenorman',maps_before:3308,search_before:13813,maps_after:3790,search_after:13962,maps_var:14.57,search_var:1.08,locations:664,maps_verdict:'NO AFECTADO',search_verdict:'NO AFECTADO'},
+{client:'mgproperties',maps_before:6941,search_before:13617,maps_after:7027,search_after:12433,maps_var:1.24,search_var:-8.70,locations:110,maps_verdict:'NO AFECTADO',search_verdict:'NO AFECTADO'},
+{client:'michaels',maps_before:624535,search_before:2539357,maps_after:708053,search_after:1291751,maps_var:13.37,search_var:-49.13,locations:2311,maps_verdict:'NO AFECTADO',search_verdict:'AFECTADO NEG'},
+{client:'miloshamburgers',maps_before:3636,search_before:7712,maps_after:3969,search_after:8784,maps_var:9.16,search_var:13.90,locations:24,maps_verdict:'NO AFECTADO',search_verdict:'NO AFECTADO'},
+{client:'monarch',maps_before:3971,search_before:21521,maps_after:4098,search_after:18471,maps_var:3.20,search_var:-14.17,locations:144,maps_verdict:'NO AFECTADO',search_verdict:'NO AFECTADO'},
+{client:'morbark_llc',maps_before:300,search_before:1984,maps_after:260,search_after:1914,maps_var:-13.33,search_var:-3.53,locations:12,maps_verdict:'NO AFECTADO',search_verdict:'NO AFECTADO'},
+{client:'mosscompany',maps_before:7355,search_before:10298,maps_after:9436,search_after:9284,maps_var:28.29,search_var:-9.85,locations:196,maps_verdict:'AFECTADO POS',search_verdict:'NO AFECTADO'},
+{client:'moz',maps_before:1201666,search_before:2665031,maps_after:1308336,search_after:2659161,maps_var:8.88,search_var:-0.22,locations:15487,maps_verdict:'NO AFECTADO',search_verdict:'NO AFECTADO'},
+{client:'mutualofamerica',maps_before:97,search_before:2001,maps_after:65,search_after:2072,maps_var:-32.99,search_var:3.55,locations:21,maps_verdict:'AFECTADO NEG',search_verdict:'NO AFECTADO'},
+{client:'my_place_hotels',maps_before:17746,search_before:12833,maps_after:17842,search_after:14522,maps_var:0.54,search_var:13.16,locations:79,maps_verdict:'NO AFECTADO',search_verdict:'NO AFECTADO'},
+{client:'nbc',maps_before:135615,search_before:388824,maps_after:193002,search_after:411147,maps_var:42.32,search_var:5.74,locations:715,maps_verdict:'AFECTADO POS',search_verdict:'NO AFECTADO'},
+{client:'newsouthwindow',maps_before:152,search_before:543,maps_after:116,search_after:500,maps_var:-23.68,search_var:-7.92,locations:10,maps_verdict:'AFECTADO NEG',search_verdict:'NO AFECTADO'},
+{client:'next_property_management',maps_before:358,search_before:990,maps_after:372,search_after:874,maps_var:3.91,search_var:-11.72,locations:14,maps_verdict:'NO AFECTADO',search_verdict:'NO AFECTADO'},
+{client:'nha',maps_before:2349,search_before:5108,maps_after:2155,search_after:4315,maps_var:-8.26,search_var:-15.52,locations:111,maps_verdict:'NO AFECTADO',search_verdict:'AFECTADO NEG'},
+{client:'noodles',maps_before:479721,search_before:171530,maps_after:606280,search_after:196100,maps_var:26.38,search_var:14.32,locations:465,maps_verdict:'AFECTADO POS',search_verdict:'NO AFECTADO'},
+{client:'officedepot',maps_before:114821,search_before:164726,maps_after:110794,search_after:151318,maps_var:-3.51,search_var:-8.14,locations:1727,maps_verdict:'NO AFECTADO',search_verdict:'NO AFECTADO'},
+{client:'oldchicago',maps_before:17107,search_before:30874,maps_after:20952,search_after:38831,maps_var:22.48,search_var:25.77,locations:53,maps_verdict:'AFECTADO POS',search_verdict:'AFECTADO POS'},
+{client:'paskingroup',maps_before:830,search_before:2668,maps_after:776,search_after:2297,maps_var:-6.51,search_var:-13.91,locations:14,maps_verdict:'NO AFECTADO',search_verdict:'NO AFECTADO'},
+{client:'pb',maps_before:461785,search_before:370654,maps_after:478648,search_after:336430,maps_var:3.65,search_var:-9.23,locations:3682,maps_verdict:'NO AFECTADO',search_verdict:'NO AFECTADO'},
+{client:'pelicanssnoballs',maps_before:782,search_before:2310,maps_after:971,search_after:3471,maps_var:24.17,search_var:50.26,locations:70,maps_verdict:'AFECTADO POS',search_verdict:'AFECTADO POS'},
+{client:'pep',maps_before:336,search_before:693,maps_after:339,search_after:586,maps_var:0.89,search_var:-15.44,locations:9,maps_verdict:'NO AFECTADO',search_verdict:'AFECTADO NEG'},
+{client:'pgt_innovations',maps_before:70,search_before:395,maps_after:42,search_after:389,maps_var:-40.00,search_var:-1.52,locations:2,maps_verdict:'AFECTADO NEG',search_verdict:'NO AFECTADO'},
+{client:'pinots',maps_before:2754,search_before:20320,maps_after:3237,search_after:21406,maps_var:17.54,search_var:5.34,locations:71,maps_verdict:'AFECTADO POS',search_verdict:'NO AFECTADO'},
+{client:'popupbagels',maps_before:12653,search_before:16093,maps_after:18656,search_after:19790,maps_var:47.44,search_var:22.97,locations:20,maps_verdict:'AFECTADO POS',search_verdict:'AFECTADO POS'},
+{client:'prairiecare',maps_before:372,search_before:2443,maps_after:365,search_after:2232,maps_var:-1.88,search_var:-8.64,locations:9,maps_verdict:'NO AFECTADO',search_verdict:'NO AFECTADO'},
+{client:'prevea',maps_before:1565,search_before:11920,maps_after:1831,search_after:5470,maps_var:17.00,search_var:-54.11,locations:285,maps_verdict:'AFECTADO POS',search_verdict:'AFECTADO NEG'},
+{client:'psav',maps_before:140,search_before:241,maps_after:124,search_after:235,maps_var:-11.43,search_var:-2.49,locations:29,maps_verdict:'NO AFECTADO',search_verdict:'NO AFECTADO'},
+{client:'pspg',maps_before:449315,search_before:268921,maps_after:390220,search_after:277564,maps_var:-13.15,search_var:3.21,locations:1269,maps_verdict:'NO AFECTADO',search_verdict:'NO AFECTADO'},
+{client:'pvhcorporation',maps_before:1728,search_before:11486,maps_after:2096,search_after:11764,maps_var:21.30,search_var:2.42,locations:31,maps_verdict:'AFECTADO POS',search_verdict:'NO AFECTADO'},
+{client:'regalmedical',maps_before:1362,search_before:6987,maps_after:1314,search_after:6492,maps_var:-3.52,search_var:-7.08,locations:198,maps_verdict:'NO AFECTADO',search_verdict:'NO AFECTADO'},
+{client:'restonic',maps_before:25,search_before:219,maps_after:21,search_after:89,maps_var:-16.00,search_var:-59.36,locations:3,maps_verdict:'AFECTADO NEG',search_verdict:'AFECTADO NEG'},
+{client:'robeks',maps_before:7867,search_before:13265,maps_after:9215,search_after:6563,maps_var:17.13,search_var:-50.52,locations:109,maps_verdict:'AFECTADO POS',search_verdict:'AFECTADO NEG'},
+{client:'roers_companies',maps_before:1464,search_before:2921,maps_after:1442,search_after:1331,maps_var:-1.50,search_var:-54.43,locations:55,maps_verdict:'NO AFECTADO',search_verdict:'AFECTADO NEG'},
+{client:'rossdressforless',maps_before:3122025,search_before:1047983,maps_after:3649586,search_after:1216904,maps_var:16.90,search_var:16.12,locations:2264,maps_verdict:'AFECTADO POS',search_verdict:'AFECTADO POS'},
+{client:'rothstaffing',maps_before:1265,search_before:15050,maps_after:1160,search_after:11790,maps_var:-8.30,search_var:-21.66,locations:98,maps_verdict:'NO AFECTADO',search_verdict:'AFECTADO NEG'},
+{client:'roundhouse_group',maps_before:1452,search_before:3806,maps_after:1296,search_after:1853,maps_var:-10.74,search_var:-51.31,locations:40,maps_verdict:'NO AFECTADO',search_verdict:'AFECTADO NEG'},
+{client:'royalamerican',maps_before:727,search_before:6,maps_after:0,search_after:1,maps_var:-100.00,search_var:-83.33,locations:106,maps_verdict:'AFECTADO NEG',search_verdict:'AFECTADO NEG'},
+{client:'salomon',maps_before:501889,search_before:21696,maps_after:491815,search_after:20014,maps_var:-2.01,search_var:-7.75,locations:48,maps_verdict:'NO AFECTADO',search_verdict:'NO AFECTADO'},
+{client:'sbarro',maps_before:9808,search_before:14626,maps_after:11622,search_after:17728,maps_var:18.50,search_var:21.21,locations:131,maps_verdict:'AFECTADO POS',search_verdict:'AFECTADO POS'},
+{client:'scenesocialmarketing',maps_before:15,search_before:39,maps_after:19,search_after:39,maps_var:26.67,search_var:0.00,locations:1,maps_verdict:'AFECTADO POS',search_verdict:'NO AFECTADO'},
+{client:'seldin',maps_before:2270,search_before:6869,maps_after:2436,search_after:5971,maps_var:7.31,search_var:-13.07,locations:135,maps_verdict:'NO AFECTADO',search_verdict:'NO AFECTADO'},
+{client:'servicemasterbrands',maps_before:12745,search_before:66930,maps_after:14476,search_after:61160,maps_var:13.58,search_var:-8.62,locations:1459,maps_verdict:'NO AFECTADO',search_verdict:'NO AFECTADO'},
+{client:'shake_shack',maps_before:163341,search_before:34560,maps_after:35172,search_after:41245,maps_var:-78.47,search_var:19.34,locations:353,maps_verdict:'AFECTADO NEG',search_verdict:'AFECTADO POS'},
+{client:'sharkeyscutsforkids',maps_before:6944,search_before:21805,maps_after:8785,search_after:24776,maps_var:26.51,search_var:13.63,locations:195,maps_verdict:'AFECTADO POS',search_verdict:'NO AFECTADO'},
+{client:'shipley',maps_before:725533,search_before:45136,maps_after:772005,search_after:50481,maps_var:6.41,search_var:11.84,locations:371,maps_verdict:'NO AFECTADO',search_verdict:'NO AFECTADO'},
+{client:'skiptown',maps_before:922,search_before:1166,maps_after:1017,search_after:1116,maps_var:10.30,search_var:-4.29,locations:3,maps_verdict:'NO AFECTADO',search_verdict:'NO AFECTADO'},
+{client:'skyzone',maps_before:704137,search_before:116989,maps_after:883702,search_after:58917,maps_var:25.50,search_var:-49.64,locations:254,maps_verdict:'AFECTADO POS',search_verdict:'AFECTADO NEG'},
+{client:'spbhospitality',maps_before:213031,search_before:301445,maps_after:250818,search_after:360939,maps_var:17.74,search_var:19.74,locations:515,maps_verdict:'AFECTADO POS',search_verdict:'AFECTADO POS'},
+{client:'sscoop',maps_before:12434,search_before:6096,maps_after:11834,search_after:2871,maps_var:-4.83,search_var:-52.90,locations:67,maps_verdict:'NO AFECTADO',search_verdict:'AFECTADO NEG'},
+{client:'sylvan_learning',maps_before:5564,search_before:21853,maps_after:5133,search_after:17977,maps_var:-7.75,search_var:-17.74,locations:604,maps_verdict:'NO AFECTADO',search_verdict:'AFECTADO NEG'},
+{client:'tbg',maps_before:481,search_before:1282,maps_after:525,search_after:576,maps_var:9.15,search_var:-55.07,locations:20,maps_verdict:'NO AFECTADO',search_verdict:'AFECTADO NEG'},
+{client:'tebra',maps_before:56174,search_before:378714,maps_after:56671,search_after:332180,maps_var:0.88,search_var:-12.29,locations:2721,maps_verdict:'NO AFECTADO',search_verdict:'NO AFECTADO'},
+{client:'thecheesecakefactory',maps_before:535938,search_before:493070,maps_after:583214,search_after:592644,maps_var:8.82,search_var:20.19,locations:276,maps_verdict:'NO AFECTADO',search_verdict:'AFECTADO POS'},
+{client:'thepicklr',maps_before:4302,search_before:10606,maps_after:4251,search_after:10789,maps_var:-1.19,search_var:1.73,locations:76,maps_verdict:'NO AFECTADO',search_verdict:'NO AFECTADO'},
+{client:'thunderdome_restaurant_group',maps_before:0,search_before:0,maps_after:0,search_after:0,maps_var:null,search_var:null,locations:1,maps_verdict:'SIN DATOS',search_verdict:'SIN DATOS'},
+{client:'traderjoes',maps_before:1022510,search_before:1116673,maps_after:1180745,search_after:1147252,maps_var:15.48,search_var:2.74,locations:619,maps_verdict:'AFECTADO POS',search_verdict:'NO AFECTADO'},
+{client:'travelleaders',maps_before:1017,search_before:4260,maps_after:1074,search_after:3975,maps_var:5.60,search_var:-6.69,locations:370,maps_verdict:'NO AFECTADO',search_verdict:'NO AFECTADO'},
+{client:'turbify',maps_before:13,search_before:121,maps_after:22,search_after:141,maps_var:69.23,search_var:16.53,locations:2,maps_verdict:'AFECTADO POS',search_verdict:'AFECTADO POS'},
+{client:'twist',maps_before:10504,search_before:47101,maps_after:12927,search_after:49753,maps_var:23.07,search_var:5.63,locations:220,maps_verdict:'AFECTADO POS',search_verdict:'NO AFECTADO'},
+{client:'unleashedbrands',maps_before:1734,search_before:4111,maps_after:2182,search_after:3638,maps_var:25.84,search_var:-11.51,locations:127,maps_verdict:'AFECTADO POS',search_verdict:'NO AFECTADO'},
+{client:'upperlinehealth',maps_before:2462,search_before:17926,maps_after:3353,search_after:15869,maps_var:36.19,search_var:-11.47,locations:281,maps_verdict:'AFECTADO POS',search_verdict:'NO AFECTADO'},
+{client:'vantage',maps_before:821,search_before:3500,maps_after:1091,search_after:3605,maps_var:32.89,search_var:3.00,locations:23,maps_verdict:'AFECTADO POS',search_verdict:'NO AFECTADO'},
+{client:'vavia',maps_before:188,search_before:1182,maps_after:152,search_after:1071,maps_var:-19.15,search_var:-9.39,locations:24,maps_verdict:'AFECTADO NEG',search_verdict:'NO AFECTADO'},
+{client:'verlo_mattress',maps_before:503,search_before:1966,maps_after:521,search_after:2002,maps_var:3.58,search_var:1.83,locations:47,maps_verdict:'NO AFECTADO',search_verdict:'NO AFECTADO'},
+{client:'victory',maps_before:19718,search_before:37617,maps_after:17913,search_after:18279,maps_var:-9.15,search_var:-51.41,locations:111,maps_verdict:'NO AFECTADO',search_verdict:'AFECTADO NEG'},
+{client:'villagegreencompanies',maps_before:5819,search_before:21718,maps_after:5954,search_after:18950,maps_var:2.32,search_var:-12.75,locations:172,maps_verdict:'NO AFECTADO',search_verdict:'NO AFECTADO'},
+{client:'w_mesquita_playground',maps_before:5,search_before:20,maps_after:4,search_after:8,maps_var:-20.00,search_var:-60.00,locations:1,maps_verdict:'AFECTADO NEG',search_verdict:'AFECTADO NEG'},
+{client:'wholefoods',maps_before:4863173,search_before:978816,maps_after:4667576,search_after:983303,maps_var:-4.02,search_var:0.46,locations:1536,maps_verdict:'NO AFECTADO',search_verdict:'NO AFECTADO'},
+{client:'wild_coffee',maps_before:4579,search_before:7744,maps_after:3514,search_after:8125,maps_var:-23.26,search_var:4.92,locations:41,maps_verdict:'AFECTADO NEG',search_verdict:'NO AFECTADO'},
+{client:'willamette_dental',maps_before:670,search_before:1652,maps_after:503,search_after:1320,maps_var:-24.93,search_var:-20.10,locations:46,maps_verdict:'AFECTADO NEG',search_verdict:'AFECTADO NEG'},
+{client:'workoutanytime',maps_before:6134,search_before:2908,maps_after:758,search_after:2673,maps_var:-87.64,search_var:-8.08,locations:183,maps_verdict:'AFECTADO NEG',search_verdict:'NO AFECTADO'},
+{client:'woworks',maps_before:28766,search_before:55829,maps_after:34275,search_after:29359,maps_var:19.15,search_var:-47.41,locations:237,maps_verdict:'AFECTADO POS',search_verdict:'AFECTADO NEG'},
+{client:'yoshinoya',maps_before:32488,search_before:19940,maps_after:36854,search_after:22413,maps_var:13.44,search_var:12.40,locations:101,maps_verdict:'NO AFECTADO',search_verdict:'NO AFECTADO'},
+{client:'yourpiefranchising',maps_before:10881,search_before:18998,maps_after:12824,search_after:24096,maps_var:17.86,search_var:26.83,locations:65,maps_verdict:'AFECTADO POS',search_verdict:'AFECTADO POS'},
+{client:'ypm',maps_before:11980,search_before:54469,maps_after:12610,search_after:49837,maps_var:5.26,search_var:-8.50,locations:1999,maps_verdict:'NO AFECTADO',search_verdict:'NO AFECTADO'},
+{client:'zellisresidential',maps_before:719,search_before:604,maps_after:817,search_after:594,maps_var:13.63,search_var:-1.66,locations:18,maps_verdict:'NO AFECTADO',search_verdict:'NO AFECTADO'},
+        ];
+
+        function initDashboard() {
+            renderTable(clientData.sort((a, b) => (a.search_var || 0) - (b.search_var || 0)));
+            initCharts();
+            
+            document.getElementById('searchInput').addEventListener('input', filterData);
+            document.getElementById('filterMaps').addEventListener('change', filterData);
+            document.getElementById('filterSearch').addEventListener('change', filterData);
+            document.getElementById('sortBy').addEventListener('change', filterData);
+        }
+
+        function renderTable(data) {
+            const tbody = document.getElementById('tableBody');
+            tbody.innerHTML = data.map(row => `
+                <tr>
+                    <td><strong>${row.client}</strong></td>
+                    <td>${row.maps_before?.toLocaleString() || '-'}</td>
+                    <td>${row.maps_after?.toLocaleString() || '-'}</td>
+                    <td style="color:${row.maps_var < 0 ? '#ff6b6b' : '#38ef7d'}">${row.maps_var !== null ? row.maps_var + '%' : '-'}</td>
+                    <td><span class="badge ${row.maps_verdict.includes('NEG') ? 'badge-neg' : row.maps_verdict.includes('POS') ? 'badge-pos' : 'badge-neu'}">${row.maps_verdict.includes('NEG') ? 'NEGATIVE' : row.maps_verdict.includes('POS') ? 'POSITIVE' : 'NOT IMPACTED'}</span></td>
+                    <td>${row.search_before?.toLocaleString() || '-'}</td>
+                    <td>${row.search_after?.toLocaleString() || '-'}</td>
+                    <td style="color:${row.search_var < 0 ? '#ff6b6b' : '#38ef7d'}">${row.search_var !== null ? row.search_var + '%' : '-'}</td>
+                    <td><span class="badge ${row.search_verdict.includes('NEG') ? 'badge-neg' : row.search_verdict.includes('POS') ? 'badge-pos' : 'badge-neu'}">${row.search_verdict.includes('NEG') ? 'NEGATIVE' : row.search_verdict.includes('POS') ? 'POSITIVE' : 'NOT IMPACTED'}</span></td>
+                    <td>${row.locations}</td>
+                </tr>
+            `).join('');
+        }
+
+        function filterData() {
+            let filtered = [...clientData];
+            const search = document.getElementById('searchInput').value.toLowerCase();
+            const mapsFilter = document.getElementById('filterMaps').value;
+            const searchFilter = document.getElementById('filterSearch').value;
+            const sortBy = document.getElementById('sortBy').value;
+            
+            if (search) filtered = filtered.filter(r => r.client.toLowerCase().includes(search));
+            if (mapsFilter !== 'all') filtered = filtered.filter(r => r.maps_verdict === mapsFilter);
+            if (searchFilter !== 'all') filtered = filtered.filter(r => r.search_verdict === searchFilter);
+            
+            filtered.sort((a, b) => {
+                if (sortBy === 'search_var') return (a.search_var || 0) - (b.search_var || 0);
+                if (sortBy === 'maps_var') return (a.maps_var || 0) - (b.maps_var || 0);
+                if (sortBy === 'locations') return b.locations - a.locations;
+                return a.client.localeCompare(b.client);
+            });
+            renderTable(filtered);
+        }
+
+        function initCharts() {
+            Chart.defaults.color = '#aaa';
+            Chart.defaults.borderColor = 'rgba(255,255,255,0.1)';
+
+            new Chart(document.getElementById('mapsChart'), {
+                type: 'doughnut',
+                data: {
+                    labels: ['Not Impacted (54%)', 'Positive (32%)', 'Negative (13%)'],
+                    datasets: [{ data: [86, 51, 21], backgroundColor: ['rgba(255,255,255,0.3)', 'rgba(56,239,125,0.7)', 'rgba(255,65,108,0.7)'], borderWidth: 0, hoverOffset: 10 }]
+                },
+                options: { responsive: true, maintainAspectRatio: false, cutout: '60%', plugins: { legend: { position: 'bottom' } }, animation: { animateRotate: true, duration: 2000 } }
+            });
+
+            new Chart(document.getElementById('searchChart'), {
+                type: 'doughnut',
+                data: {
+                    labels: ['Not Impacted (58%)', 'Positive (13%)', 'Negative (26%)'],
+                    datasets: [{ data: [93, 20, 42], backgroundColor: ['rgba(255,255,255,0.3)', 'rgba(56,239,125,0.7)', 'rgba(255,65,108,0.7)'], borderWidth: 0, hoverOffset: 10 }]
+                },
+                options: { responsive: true, maintainAspectRatio: false, cutout: '60%', plugins: { legend: { position: 'bottom' } }, animation: { animateRotate: true, duration: 2000 } }
+            });
+
+            new Chart(document.getElementById('comparisonChart'), {
+                type: 'bar',
+                data: {
+                    labels: ['Negative', 'Not Impacted', 'Positive'],
+                    datasets: [
+                        { label: 'Maps', data: [21, 86, 51], backgroundColor: 'rgba(0,210,255,0.7)', borderRadius: 8 },
+                        { label: 'Search', data: [42, 93, 20], backgroundColor: 'rgba(255,107,107,0.7)', borderRadius: 8 }
+                    ]
+                },
+                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'top' } }, scales: { y: { beginAtZero: true, grid: { color: 'rgba(255,255,255,0.05)' } }, x: { grid: { display: false } } }, animation: { duration: 2000, easing: 'easeOutBounce' } }
+            });
+
+            const top10 = clientData.filter(d => d.search_var !== null).sort((a,b) => a.search_var - b.search_var).slice(0, 10);
+            new Chart(document.getElementById('top10Chart'), {
+                type: 'bar',
+                data: {
+                    labels: top10.map(d => d.client.substring(0,15)),
+                    datasets: [{ label: 'Search Variation %', data: top10.map(d => d.search_var), backgroundColor: top10.map(d => d.search_var < 0 ? 'rgba(255,65,108,0.7)' : 'rgba(56,239,125,0.7)'), borderRadius: 4 }]
+                },
+                options: { indexAxis: 'y', responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { x: { grid: { color: 'rgba(255,255,255,0.05)' } }, y: { grid: { display: false } } }, animation: { duration: 2000, easing: 'easeOutQuart' } }
+            });
+        }
+    </script>
+</body>
+</html>
